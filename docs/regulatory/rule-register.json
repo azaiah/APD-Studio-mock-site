@@ -693,6 +693,7 @@
       "confidence": "HIGH",
       "confidenceNote": "Verified 2026-07-27 against https://www.ssa.gov/OP_Home/ssact/title19/1903.htm. OQ-004 closed. The rate is correctly absent from 42 CFR 433.112 and 433.116 — cite the statute, not Part 433.",
       "severity": "info",
+      "applicabilityWarning": "REGULAR FFP ONLY. This is the 50 percent administrative rate under Social Security Act s.1903(a)(7). Never substitute it for the enhanced MES rates — 90 percent DDI (RR-RATE-DDI-90, 42 CFR 433.112(a)) and 75 percent operations (RR-RATE-OPS-75, 42 CFR 433.116(a)) — and never cite 42 CFR Part 433 as its authority.",
       "verbatim": "an amount equal to 50 per centum of the remainder of the amounts expended during such quarter",
       "scope": "costs \"found necessary by the Secretary for the proper and efficient administration of the State plan\""
     },
@@ -1683,7 +1684,8 @@
       "citation": "45 CFR 95.611(a)(2)(ii) vs 45 CFR 95.611(b)(2)(i)-(ii) and 42 CFR 433.112(a)",
       "issue": "45 CFR 95.611(a)(2) frames the general enhanced prior-approval requirement as: 'A State must obtain prior approval ... at the enhanced matching rate subject to one of the following: ... (ii) If authorized by 42 CFR part 433, subpart C, if the contract is anticipated to or will exceed $500,000.' Read alone, that appears to condition enhanced prior approval on the $500,000 threshold, which sits awkwardly against (b)(2)(i)-(ii) requiring PAPD and IAPD approval with no threshold.",
       "ourPosition": "PAPDs and IAPDs require prior approval regardless of dollar amount. Paragraph (a)(2)(ii)'s $500,000 figure governs CONTRACTS, not APDs; (b)(2)(i)-(ii) state the APD requirement without threshold; and 42 CFR 433.112(a) independently conditions 90 percent FFP on APD approval prior to expenditure with no dollar floor.",
-      "confidence": "HIGH on the position; the textual tension is real and recorded so it is not invisible.",
+      "confidence": "HIGH",
+      "confidenceNote": "HIGH on the position; the textual tension is real and recorded so it is not invisible.",
       "severity": "info",
       "productNote": "This is exactly the kind of hook a state's counsel raises. Better to have the answer ready than to be surprised by it."
     }
