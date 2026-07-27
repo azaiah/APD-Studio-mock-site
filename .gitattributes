@@ -1,0 +1,22 @@
+# Normalize line endings. Without this, a Windows checkout rewrites every file
+# to CRLF and the first cross-platform diff is unreadable.
+* text=auto eol=lf
+
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.js   text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.sql  text eol=lf
+
+*.png  binary
+*.jpg  binary
+*.pdf  binary
+*.xlsx binary
+*.docx binary
+
+# The regulatory artifacts are large and rarely hand-edited. Marking them keeps
+# `git diff` on a rule change readable instead of a 100KB wall.
+docs/regulatory/*.json          linguist-generated=true
+packages/*/data/*.json          linguist-generated=true

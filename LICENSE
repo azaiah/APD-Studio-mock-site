@@ -1,0 +1,29 @@
+Copyright (c) 2026 [LEGAL ENTITY]. All rights reserved.
+
+PROPRIETARY AND CONFIDENTIAL
+
+This software and its associated documentation, including without limitation the
+regulatory rule register, the APD section schema, and the validation rule set,
+are the confidential and proprietary property of [LEGAL ENTITY].
+
+No part of this repository may be reproduced, distributed, or transmitted in any
+form or by any means, or stored in a database or retrieval system, without prior
+written permission.
+
+---
+
+NOTE ON THE CONTENTS
+
+The federal regulations, statutes, and CMS guidance documents cited throughout
+this repository are public domain works of the United States Government and are
+not claimed as proprietary. What is proprietary is the structured register, the
+schema, the validation logic, the verification methodology, and the analysis —
+including the identification of conflicts between CMS sources.
+
+NOTE ON WHAT THIS IS NOT
+
+This software provides regulatory analysis, not legal advice. Its authors are
+not attorneys and are not any state's authorized representative. No CMS
+endorsement, partnership, or pre-approval is claimed or implied; no such thing
+exists. A named state official is responsible for reviewing, approving, and
+filing any document this software helps produce.

@@ -1,0 +1,12 @@
+{
+  "name": "@apd-studio/validators",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": { "test": "vitest run", "typecheck": "tsc --noEmit" },
+  "dependencies": {
+    "@apd-studio/rules": "workspace:*",
+    "@apd-studio/templates": "workspace:*",
+    "@apd-studio/budget": "workspace:*"
+  }
+}

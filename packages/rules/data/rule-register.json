@@ -1,0 +1,1817 @@
+{
+  "meta": {
+    "artifact": "R3 — Rule Register",
+    "registerVersion": "0.2.0",
+    "verifiedAsOf": "2026-07-27",
+    "staleAfter": "2026-10-25",
+    "description": "Every threshold, trigger, deadline, condition, and attestation in the Medicaid APD regime, expressed as machine-readable objects. This is the Regulatory Knowledge Core's seed data and the Change Radar's rule source. Each rule carries the verbatim source text it was derived from, so a validator finding can always be traced back to a citation a CMS State Officer would recognize.",
+    "confidenceLegend": {
+      "HIGH": "Verbatim text retrieved from the primary source (eCFR, Federal Register, or the CMS letter itself) during this research pass.",
+      "MEDIUM": "Retrieved from a primary source but through a summarizing layer, or the operative wording was normalized. Re-verify verbatim before customer-facing use.",
+      "LOW": "Sourced from a secondary source, or asserted in project materials but NOT verified against a primary source in this pass. Must not ship into a validator until verified.",
+      "UNVERIFIED": "Believed true but no primary source retrieved. Treated as an open question, not a rule."
+    },
+    "severityLegend": {
+      "blocker": "Failure means the submission should not go to CMS.",
+      "error": "Failure will very likely draw a CMS question or a return.",
+      "warning": "Failure is a quality or risk issue, not a rule violation.",
+      "info": "Baseline capture or informational."
+    },
+    "fundingTrackLegend": {
+      "ENHANCED": "Enhanced FFP — Medicaid MMIS/E&E under 42 CFR Part 433 Subpart C. This is APD Studio's primary track.",
+      "REGULAR": "Regular FFP — included for multi-program and non-Medicaid context. Do not apply these thresholds to Medicaid MES work."
+    },
+    "sourcesLastVerified": {
+      "45 CFR Part 95 Subpart F": {
+        "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-A/part-95/subpart-F",
+        "titleLastAmended": "2026-07-23",
+        "retrieved": "2026-07-27"
+      },
+      "42 CFR Part 433 Subpart C": {
+        "url": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-433/subpart-C",
+        "partLastAmended": "2024-10-02 (89 FR 80069)",
+        "retrieved": "2026-07-27"
+      },
+      "SHO #25-003": {
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/sho25003.pdf",
+        "date": "2025-08-06",
+        "retrieved": "2026-07-27"
+      },
+      "SHO #25-003 FAQ": {
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/sho25003-faq.pdf",
+        "retrieved": "2026-07-27"
+      },
+      "SMC Guidance v2.0": {
+        "url": "https://www.medicaid.gov/medicaid/data-and-systems/downloads/smc-certification-guidance.pdf",
+        "version": "2.0",
+        "date": "2025-10-21",
+        "retrieved": "2026-07-27"
+      },
+      "SMDL #22-001": {
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/smd22001.pdf",
+        "date": "2022-04-14",
+        "retrieved": "2026-07-27"
+      },
+      "CMCS CIB 12/08/2025": {
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/cib12082025.pdf",
+        "date": "2025-12-08",
+        "retrieved": "2026-07-27"
+      },
+      "CMCS CIB 11/18/2025": {
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/cib11182025.pdf",
+        "date": "2025-11-18",
+        "retrieved": "2026-07-27"
+      },
+      "CMS-2454-IFC": {
+        "citation": "91 FR 33348",
+        "frDocNumber": "2026-11094",
+        "published": "2026-06-03",
+        "effective": "2026-07-31",
+        "retrieved": "2026-07-27"
+      }
+    },
+    "sectionInventory": {
+      "45 CFR Part 95 Subpart F": [
+        "95.601 Scope and applicability",
+        "95.605 Definitions",
+        "95.610 Submission of advance planning documents",
+        "95.611 Prior approval conditions",
+        "95.612 Disallowance of Federal Financial Participation (FFP)",
+        "95.613 Procurement standards",
+        "95.615 Access to systems and records",
+        "95.617 Software and ownership rights",
+        "95.619 Use of ADP systems",
+        "95.621 ADP reviews",
+        "95.623 Reconsideration of denied FFP for failure to obtain prior approval",
+        "95.624 Consideration for FFP in emergency situations",
+        "95.625 Increased FFP for certain ADP systems",
+        "95.626 Independent Verification and Validation",
+        "95.627 Waivers",
+        "95.631 Cost identification for purpose of FFP claims",
+        "95.633 Nondiscrimination requirements",
+        "95.635 Disallowance of Federal financial participation for automated systems that fail to comply substantially with requirements",
+        "95.641 Applicability of rules for charging equipment in subpart G of this part"
+      ],
+      "42 CFR Part 433 Subpart C": [
+        "433.110 Basis, purpose, and applicability",
+        "433.111 Definitions",
+        "433.112 FFP for design, development, installation or enhancement of mechanized processing and information retrieval systems",
+        "433.114 Procedures for obtaining initial approval; notice of decision",
+        "433.116 FFP for operation of mechanized claims processing and information retrieval systems",
+        "433.117 Initial approval of replacement systems",
+        "433.119 Conditions for reapproval; notice of decision",
+        "433.120 Procedures for reduction of FFP after reapproval review",
+        "433.121 Reconsideration of the decision to reduce FFP after reapproval review",
+        "433.122 Reapproval of a disapproved system",
+        "433.123 Notification of changes in system requirements, performance standards or other conditions for approval or reapproval",
+        "433.127 Termination of FFP for failure to provide access to claims processing and information retrieval systems",
+        "433.131 Waiver for noncompliance with conditions of approval and reapproval"
+      ],
+      "inventoryNote": "Both subparts have non-contiguous numbering. There is no 42 CFR 433.113, 433.115, 433.118, 433.124-433.126, 433.128, 433.129, or 433.130. Corrections against common assumptions: 45 CFR 95.626 is 'Independent Verification and Validation', NOT emergency acquisitions — emergency acquisitions are at 45 CFR 95.624. 42 CFR 433.110 is 'Basis, purpose, and applicability', not '...and scope'."
+    },
+    "auditHistory": [
+      {
+        "date": "2026-07-27",
+        "type": "adversarial citation audit against primary sources",
+        "scope": "45 CFR 95.611 thresholds and triggers; Annual APDU deadline; 42 CFR 433.112(b) count and five spot-checks; 433.119/433.114 range asymmetry; 433.116(a) and (j); 45 CFR 95.610(c)(3); statutory authority for the 50 percent rate; full section inventories of both subparts",
+        "errorsFound": 5,
+        "errorsCorrected": 5,
+        "verifiedClean": [
+          "42 CFR 433.112(b) — 22 conditions, five spot-checks exact",
+          "42 CFR 433.119(a)(1) reapproval subset (b)(1),(3),(4),(7)-(22)",
+          "the 433.116 (c)-(i) initial vs (d)-(j) reapproval asymmetry",
+          "all six enhanced and five regular As-Needed APDU triggers",
+          "every 95.611 dollar threshold",
+          "both section inventories",
+          "45 CFR 95.624 / 95.626 assignment",
+          "42 CFR 433.110 title",
+          "the nine non-existent 42 CFR 433 section numbers",
+          "42 CFR 433.117",
+          "42 CFR 433.131"
+        ],
+        "questionsClosed": [
+          "OQ-002",
+          "OQ-004"
+        ]
+      }
+    ]
+  },
+  "rules": [
+    {
+      "id": "RR-PA-ENH-PAPD",
+      "category": "prior-approval",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(b)(2)(i)",
+      "effectiveDate": null,
+      "appliesTo": [
+        "PAPD"
+      ],
+      "trigger": "A state intends to claim enhanced FFP for planning activities.",
+      "obligation": "Submit a Planning APD for CMS prior approval, regardless of dollar amount.",
+      "threshold": null,
+      "thresholdNote": "No dollar threshold. Applies to every PAPD on the enhanced track.",
+      "deadline": "Before expenditure of funds.",
+      "consequence": "FFP may be disallowed (45 CFR 95.612; 45 CFR 95.635). For enhanced 90 percent DDI, 42 CFR 433.112(a) conditions availability on approval prior to expenditure.",
+      "verbatim": "Planning APD required",
+      "source": "45 CFR 95.611(b)(2)(i)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S5-001"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-PA-ENH-IAPD",
+      "category": "prior-approval",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(b)(2)(ii)",
+      "appliesTo": [
+        "IAPD"
+      ],
+      "trigger": "A state intends to claim enhanced FFP for design, development, installation or enhancement.",
+      "obligation": "Submit an Implementation APD for CMS prior approval, regardless of dollar amount.",
+      "threshold": null,
+      "deadline": "Before expenditure of funds.",
+      "consequence": "90 percent FFP is unavailable. 42 CFR 433.112(a): FFP at the 90 percent rate is available 'only if the APD is approved by CMS prior to the State's expenditure of funds for these purposes.'",
+      "verbatim": "Implementation APD required",
+      "source": "45 CFR 95.611(b)(2)(ii); 42 CFR 433.112(a)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S8-004"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-PA-ENH-CONTRACT",
+      "category": "prior-approval",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(b)(2)(iii)",
+      "appliesTo": [
+        "acquisition",
+        "solicitation",
+        "contract"
+      ],
+      "trigger": "A solicitation document or contract is anticipated to exceed $500,000.",
+      "obligation": "Obtain CMS prior approval of the solicitation document and contract, unless exempted.",
+      "threshold": {
+        "amount": 500000,
+        "currency": "USD",
+        "basis": "anticipated total cost",
+        "comparator": "exceeds"
+      },
+      "deadline": "Before release of the solicitation / before contract execution.",
+      "consequence": "Disallowance exposure under 45 CFR 95.612 and 95.635; reconsideration available under 45 CFR 95.623 within 30 days.",
+      "verbatim": "For the acquisition solicitation documents and contract, unless specifically exempted by the Department, prior to release of the acquisition solicitation documents or prior to execution of the contract when the contract is anticipated to or will exceed $500,000.",
+      "source": "45 CFR 95.611(b)(2)(iii)",
+      "confidence": "HIGH",
+      "relatedRules": [
+        "RR-PROC-CHECKLIST",
+        "RR-PA-EXEMPTION"
+      ],
+      "validatorRefs": [
+        "V-APD-S5-001",
+        "V-OAPD-S2-001"
+      ],
+      "severity": "blocker",
+      "thresholdNote": "Note \"anticipated to OR WILL exceed\" — this captures already-known overages, not only forecasts."
+    },
+    {
+      "id": "RR-PA-ENH-AMENDMENT",
+      "category": "prior-approval",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(b)(2)(iv)",
+      "appliesTo": [
+        "contract amendment"
+      ],
+      "trigger": "A contract amendment increases cost by more than $500,000 OR extends the contract term by more than 60 days.",
+      "obligation": "Obtain CMS prior approval of the amendment.",
+      "threshold": {
+        "costIncrease": {
+          "amount": 500000,
+          "comparator": "exceeds"
+        },
+        "termExtensionDays": {
+          "days": 60,
+          "comparator": "exceeds"
+        },
+        "logic": "OR"
+      },
+      "deadline": "Before amendment execution.",
+      "consequence": "Disallowance exposure under 45 CFR 95.612 and 95.635.",
+      "verbatim": "For contract amendments, unless specifically exempted by the Department, prior to execution of the contract amendment, involving contract cost increases exceeding $500,000 or contract time extensions of more than 60 days.",
+      "source": "45 CFR 95.611(b)(2)(iv)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S5-002"
+      ],
+      "severity": "blocker",
+      "productNote": "The 60-day term-extension prong is widely missed. States watch the dollar figure and forget that a no-cost 90-day extension also requires prior approval."
+    },
+    {
+      "id": "RR-PA-REG-THRESHOLD",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(a)(1)",
+      "appliesTo": [
+        "acquisition"
+      ],
+      "trigger": "Total acquisition cost of ADP equipment or services is $5,000,000 or more in Federal and State funds.",
+      "obligation": "Obtain prior Department approval.",
+      "threshold": {
+        "amount": 5000000,
+        "basis": "total Federal and State funds",
+        "comparator": "at or above"
+      },
+      "verbatim": "$5,000,000 or more in Federal and State funds",
+      "source": "45 CFR 95.611(a)(1)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY. Never apply this threshold to Medicaid MES enhanced-match work — the enhanced threshold is $500,000 for contracts and zero for APDs."
+    },
+    {
+      "id": "RR-PA-REG-SOLESOURCE",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(a)(3); 45 CFR 95.611(b)(1)(iv)",
+      "appliesTo": [
+        "acquisition"
+      ],
+      "trigger": "Sole source or noncompetitive acquisition with total State and Federal costs of $1,000,000 or more.",
+      "obligation": "Obtain prior approval; noncompetitive acquisitions exceeding $1,000,000 require a sole source justification.",
+      "threshold": {
+        "amount": 1000000,
+        "comparator": "at or above"
+      },
+      "verbatim": "$1,000,000 or more; Noncompetitive acquisitions exceeding \"$1,000,000\" require sole source justification",
+      "source": "45 CFR 95.611(a)(3), (b)(1)(iv)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY."
+    },
+    {
+      "id": "RR-PA-REG-SOFTWAREDEV",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(b)(1)(v)(A)",
+      "trigger": "Software application development contract.",
+      "obligation": "Submit for prior approval unless exempted.",
+      "threshold": {
+        "competitive": 6000000,
+        "noncompetitive": 1000000
+      },
+      "verbatim": "Software development: \"$6,000,000\" (competitive), \"$1,000,000\" (noncompetitive)",
+      "source": "45 CFR 95.611(b)(1)(v)(A)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY."
+    },
+    {
+      "id": "RR-PA-REG-HARDWARE",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(b)(1)(v)(B)",
+      "trigger": "Hardware or COTS acquisition.",
+      "obligation": "Submit for prior approval unless exempted.",
+      "threshold": {
+        "competitive": 20000000,
+        "noncompetitive": 1000000
+      },
+      "verbatim": "Hardware/COTS: \"$20,000,000\" (competitive), \"$1,000,000\" (noncompetitive)",
+      "source": "45 CFR 95.611(b)(1)(v)(B)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY."
+    },
+    {
+      "id": "RR-PA-REG-AMENDMENT",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(b)(1)(vi)",
+      "trigger": "Contract amendments with cumulative cost increases exceeding 20 percent of the base contract cost.",
+      "obligation": "Obtain prior approval.",
+      "threshold": {
+        "percentOfBaseContract": 20,
+        "cumulative": true,
+        "comparator": "exceeds"
+      },
+      "verbatim": "Contract amendments with cumulative cost increases exceeding \"20 percent of the base contract cost\" require prior approval",
+      "source": "45 CFR 95.611(b)(1)(vi)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY. The enhanced-track amendment rule is RR-PA-ENH-AMENDMENT ($500,000 or 60 days)."
+    },
+    {
+      "id": "RR-PA-EXEMPTION",
+      "category": "prior-approval",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.611(e)",
+      "trigger": "An acquisition is summarized in an approved Planning, Annual, or As-Needed APDU.",
+      "obligation": "Approval of the APDU constitutes exemption from separate federal prior approval for the summarized acquisitions, unless the Department specifically requests documentation in writing.",
+      "verbatim": "Approval of Planning, Annual, or As-Needed APDUs constitutes exemption from Federal prior approval for summarized acquisitions unless the Department specifically requests additional documentation in writing.",
+      "source": "45 CFR 95.611(e)",
+      "confidence": "MEDIUM",
+      "confidenceNote": "Retrieved through a summarizing layer. Re-verify verbatim. This rule can only ever REDUCE a state obligation, so a wrong reading is directly harmful.",
+      "severity": "info",
+      "productGuardrail": "APD Studio must never assert an exemption on its own. Surface the exemption as a possibility and require human confirmation.",
+      "correctionApplied": "2026-07-27 audit: this rule previously carried the three exemption conditions from 45 CFR 95.611(b)(1)(iii)(A)-(C) while tagged fundingTrack BOTH. Those conditions sit inside paragraph (b)(1), headed \"For regular FFP requests,\" and have NO counterpart in (b)(2), the enhanced subsection. Applying them to enhanced-track Medicaid MES work could have caused a state to skip a required prior-approval submission. The regular-track version is now RR-PA-EXEMPTION-REG."
+    },
+    {
+      "id": "RR-PA-CMS-RESPONSE-CLOCK",
+      "category": "deadline",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.611(d)",
+      "trigger": "The Department acknowledges receipt of a prior-approval request.",
+      "obligation": "The Department must approve, disapprove, or request information within 60 days of acknowledging receipt.",
+      "deadline": {
+        "days": 60,
+        "from": "the date of the Departmental letter acknowledging receipt of the State's request"
+      },
+      "consequence": "The Department will consider the request to have provisionally met the prior approval conditions of paragraph (b).",
+      "verbatim": "Prompt action on requests for prior approval. The Department will promptly send to the approving Federal program offices the items specified in paragraph (b) of this section. If the Department has not provided approval, disapproval, or a request for information which is reflected in a record, within 60 days of the date of the Departmental letter acknowledging receipt of a State's request, the Department will consider the request to have provisionally met the prior approval conditions of paragraph (b) of this section.",
+      "source": "45 CFR 95.611(d)",
+      "confidence": "HIGH",
+      "confidenceNote": "Retrieved through a summarizing layer; the word 'provisionally' was quoted. Re-verify verbatim — this rule runs in the STATE's favor and will be quoted back at CMS, so it must be exact.",
+      "severity": "info",
+      "productNote": "This is a genuinely valuable, under-used rule and a strong CMS Correspondence Hub feature: track the acknowledgment date, run the 60-day clock, and tell the state when it has a provisional approval argument.",
+      "structureNote": "The regulation is NOT phrased as a duty on HHS; it is phrased as a consequence. The clock runs from the date of a DATED DEPARTMENTAL LETTER acknowledging receipt, which gives the state a documentary anchor. Track that letter's date on intake."
+    },
+    {
+      "id": "RR-TRIG-ENH-COST",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(A)",
+      "trigger": "Projected cost increase of $300,000 or 10 percent of project cost, whichever is less.",
+      "threshold": {
+        "amountUsd": 300000,
+        "percentOfProjectCost": 10,
+        "selector": "whichever is less"
+      },
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "consequence": "Noncompliance with prior-approval conditions; disallowance exposure under 45 CFR 95.612 and 95.635.",
+      "verbatim": "A projected cost increase of $300,000 or 10 percent of the project cost, whichever is less;",
+      "source": "45 CFR 95.611(c)(2)(ii)(A)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S8-008"
+      ],
+      "severity": "blocker",
+      "changeRadar": {
+        "monitors": "total project cost",
+        "baselineFrom": "last approved APD Section 8 total",
+        "computation": "raise when delta >= min(300000, 0.10 * approvedProjectCost)"
+      }
+    },
+    {
+      "id": "RR-TRIG-ENH-SCHEDULE",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(B)",
+      "trigger": "Schedule extension of more than 60 days for a major milestone.",
+      "threshold": {
+        "days": 60,
+        "comparator": "exceeds",
+        "appliesTo": "major milestone"
+      },
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "consequence": "Noncompliance with prior-approval conditions; disallowance exposure.",
+      "verbatim": "Schedule extension exceeding 60 days",
+      "source": "45 CFR 95.611(c)(2)(ii)(B)",
+      "confidence": "HIGH",
+      "additionalProvision": "The same paragraph carries a provision that AFDC FAMIS-type projects trigger 40 percent recovery if implementation deadlines are not met, with federal exceptions for equipment failure or judicial/legislative changes. Not applicable to Medicaid MES work; recorded for completeness.",
+      "validatorRefs": [
+        "V-APD-S1-003",
+        "V-APD-S7-005"
+      ],
+      "severity": "blocker",
+      "changeRadar": {
+        "monitors": "major milestone finish dates",
+        "baselineFrom": "last approved APD Section 7 Table C",
+        "computation": "raise when any major milestone finish date slips > 60 days from baseline"
+      },
+      "productNote": "This is the highest-value Change Radar rule. Most state slippage is invisible to the person responsible for filing the APDU. A system watching the schedule and firing 'you have 60 days to file' is worth the license fee by itself."
+    },
+    {
+      "id": "RR-TRIG-ENH-PROCUREMENT",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(C)",
+      "trigger": "Significant change in procurement approach or scope.",
+      "threshold": null,
+      "thresholdNote": "Qualitative. 'Significant' is not numerically defined in the regulation. Requires human judgment — the product should prompt, not decide.",
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "verbatim": "Significant procurement approach or scope changes",
+      "source": "45 CFR 95.611(c)(2)(ii)(C)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S1-003"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-TRIG-ENH-SCOPE",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(D)",
+      "trigger": "Change to system concept or project scope.",
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "verbatim": "System concept or scope changes",
+      "source": "45 CFR 95.611(c)(2)(ii)(D)",
+      "confidence": "HIGH",
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-TRIG-ENH-COSTALLOC",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(E)",
+      "trigger": "Change to the approved cost methodology.",
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "verbatim": "A change to the approved cost methodology",
+      "source": "45 CFR 95.611(c)(2)(ii)(E)",
+      "confidence": "HIGH",
+      "relatedRules": [
+        "RR-CAP-AMEND"
+      ],
+      "validatorRefs": [
+        "V-APD-S10-006"
+      ],
+      "severity": "blocker",
+      "wordingNote": "The ENHANCED trigger at (c)(2)(ii)(E) says \"cost methodology\". It is the REGULAR trigger at (c)(1)(ii)(E) that says \"cost allocation methodology\". Quote the right one for the right track."
+    },
+    {
+      "id": "RR-TRIG-ENH-COSTBENEFIT",
+      "category": "apdu-trigger",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)(ii)(F)",
+      "trigger": "Change exceeding 10 percent of the estimated cost-benefit.",
+      "threshold": {
+        "percent": 10,
+        "basis": "cost benefit estimate",
+        "comparator": "exceeds"
+      },
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the change occurs"
+      },
+      "verbatim": "A change of more than 10% of estimated cost benefits.",
+      "source": "45 CFR 95.611(c)(2)(ii)(F)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S4-003"
+      ],
+      "severity": "blocker",
+      "productNote": "This trigger has no regular-FFP counterpart — it exists only on the enhanced track. It is also the least-tracked of the six, because states rarely revisit the cost-benefit analysis after approval."
+    },
+    {
+      "id": "RR-DEADLINE-ASNEEDED-APDU",
+      "category": "deadline",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(c)(2)",
+      "trigger": "Any of RR-TRIG-ENH-* fires.",
+      "obligation": "Submit the As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the OCCURRENCE of the project change",
+        "note": "Runs from occurrence, NOT from discovery. There is no tolling for a state that did not notice. This is precisely why the Change Sentinel exists."
+      },
+      "verbatim": "The State shall submit the 'As Needed APDU' to the Department, no later than 60 days after the occurrence of the project changes to be reported in the 'As Needed APDU'.",
+      "source": "45 CFR 95.611(c)(2)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "citationNote": "This sentence is undesignated flush text appearing twice — once closing (c)(1)(ii) and once closing (c)(2)(ii)(F). Citing 95.611(c)(2) is acceptable; strictly it has no paragraph designator of its own."
+    },
+    {
+      "id": "RR-TRIG-REG-ALL",
+      "category": "apdu-trigger",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(c)(1)(ii)",
+      "trigger": "Regular-FFP As-Needed APDU triggers: (A) projected cost increase of $1,000,000 or more; (B) schedule extension exceeding 60 days for major milestones; (C) significant procurement approach or scope changes; (D) system concept or project scope changes; (E) approved cost allocation methodology changes.",
+      "threshold": {
+        "costIncrease": 1000000,
+        "scheduleDays": 60
+      },
+      "obligation": "Submit an As-Needed APDU.",
+      "deadline": {
+        "days": 60,
+        "from": "the date the project change occurs"
+      },
+      "verbatim": "Projected cost increase of \"$1,000,000 or more\"; Schedule extension exceeding 60 days for major milestones",
+      "source": "45 CFR 95.611(c)(1)(ii)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "applicabilityWarning": "REGULAR FFP ONLY. Note the regular track has FIVE triggers; the enhanced track has SIX — the cost-benefit trigger exists only on the enhanced track.",
+      "productNote": "The enhanced track is materially tighter: $300,000-or-10-percent versus $1,000,000. A state moving between programs will get this wrong."
+    },
+    {
+      "id": "RR-DEADLINE-ANNUAL-APDU",
+      "category": "deadline",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.610(c)(1)",
+      "trigger": "An approved project with a current FFP approval period.",
+      "obligation": "Submit an Annual APDU.",
+      "deadline": {
+        "days": 60,
+        "before": "expiration of the FFP approval",
+        "triggerDate": "FFP approval expiration date"
+      },
+      "consequence": "Lapse of approval; disallowance exposure.",
+      "source": "45 CFR 95.611(c)(2)(i); 45 CFR 95.610(c)(1)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "secondaryCitation": "45 CFR 95.611(c)(2)(i) — establishes that an Annual APDU is required; it carries NO timing. Its full text is \"For an Annual APDU.\"",
+      "verbatim": "The Annual APDU, which is due 60 days prior to the expiration of the FFP approval, includes:",
+      "confidenceNote": "Verified 2026-07-27 on two independent hosts (eCFR and Cornell LII). OQ-002 closed.",
+      "correctionApplied": "2026-07-27 audit: the deadline was previously marked UNVERIFIED because it was hung off 45 CFR 95.611(c)(2)(i), which does not contain it. The deadline is real and verbatim at 45 CFR 95.610(c)(1)."
+    },
+    {
+      "id": "RR-OAPD-ANNUAL",
+      "category": "deadline",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.610(c)(3); SHO #25-003 FAQ",
+      "trigger": "A state has an approved system in maintenance and operations.",
+      "obligation": "Submit an OAPD for every project in the annual update, using the MES OAPD template.",
+      "deadline": {
+        "cadence": "annual"
+      },
+      "verbatim": "States must submit an OAPD for every project in their annual update",
+      "source": "SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "relatedRules": [
+        "RR-RPT-ORW-AFFIRM"
+      ],
+      "severity": "blocker",
+      "terminologyNote": "The regulation's term is \"Operational Advance Planning Document Update (OAPDU)\" — an Update. CMS's template is titled \"Operational Advanced Planning Document (MES OAPD)\". Use CMS's template name in product UI; use the regulation's term when citing 45 CFR 95.610(c)(3).",
+      "verbatimCfr": "The Operational Advance Planning Document Update (OAPDU) is an annual submission of no more than two pages, including: (i) Summary of activities; (ii) Acquisitions; and, (iii) Annual budget by project/system receiving funding through the programs covered under this part."
+    },
+    {
+      "id": "RR-RATE-DDI-90",
+      "category": "match-rate",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(a)",
+      "appliesTo": [
+        "MMIS DDI",
+        "E&E DDI"
+      ],
+      "rate": {
+        "federal": 90,
+        "state": 10
+      },
+      "activity": "design, development, installation, or enhancement",
+      "condition": "The APD must be approved by CMS PRIOR to the state's expenditure of funds.",
+      "verbatim": "FFP is available at the 90 percent rate in State expenditures for the design, development, installation, or enhancement of a mechanized claims processing and information retrieval system only if the APD is approved by CMS prior to the State's expenditure of funds for these purposes.",
+      "source": "42 CFR 433.112(a)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S8-002",
+        "V-APD-S8-004"
+      ],
+      "severity": "blocker",
+      "statutoryAuthority": "Social Security Act s.1903(a)(3)(A)"
+    },
+    {
+      "id": "RR-RATE-EE-DDI-90",
+      "category": "match-rate",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(c)(1)",
+      "appliesTo": [
+        "E&E DDI"
+      ],
+      "rate": {
+        "federal": 90,
+        "state": 10
+      },
+      "effectiveDate": "2011-04-19",
+      "verbatim": "FFP is available at 90 percent of a State's expenditures for the design, development, installation or enhancement of an E&E system that meets the requirements of this subpart and only for costs incurred for goods and services provided on or after April 19, 2011.",
+      "source": "42 CFR 433.112(c)(1)",
+      "confidence": "HIGH",
+      "additionalProvision": "42 CFR 433.112(c)(2): DDI costs include initial COTS licensing and the minimum necessary costs to analyze COTS suitability, install, configure and integrate COTS, and modify non-COTS software to ensure coordination of operations. 'The nature and extent of such costs must be expressly described in the approved APD.'",
+      "validatorRefs": [
+        "V-APD-S8-003"
+      ],
+      "severity": "blocker",
+      "productNote": "The COTS provision at (c)(2) is a frequently missed drafting requirement: COTS licensing costs are 90-percent eligible only if their nature and extent are EXPRESSLY DESCRIBED in the approved APD. A generic line item fails.",
+      "statutoryAuthority": "Social Security Act s.1903(a)(3)(A)"
+    },
+    {
+      "id": "RR-RATE-OPS-75",
+      "category": "match-rate",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.116(a)",
+      "appliesTo": [
+        "MMIS M&O",
+        "E&E M&O"
+      ],
+      "rate": {
+        "federal": 75,
+        "state": 25
+      },
+      "activity": "operation of an approved system",
+      "condition": "System must be approved by CMS. FFP begins the first day of the calendar quarter after initial approval conditions are met.",
+      "verbatim": "FFP is available at 75 percent of expenditures for operation of a mechanized claims processing and information retrieval system approved by CMS, from the first day of the calendar quarter after the date the system met the conditions of initial approval, as established by CMS (including a retroactive adjustment of FFP if necessary to provide the 75 percent rate beginning on the first day of that calendar quarter).",
+      "source": "42 CFR 433.116(a)",
+      "confidence": "HIGH",
+      "confidenceNote": "Full verbatim retrieved and verified 2026-07-27.",
+      "validatorRefs": [
+        "V-OAPD-S3-001"
+      ],
+      "severity": "blocker",
+      "statutoryAuthority": "Social Security Act s.1903(a)(3)(B)",
+      "retroactiveAdjustment": "The parenthetical is commercially useful: a state can recover the 75 percent rate back to the first day of the quarter in which the system met initial-approval conditions.",
+      "correctionApplied": "2026-07-27 audit: the prior verbatim string truncated at \"approved by CMS\" and closed with a period where the regulation has a comma, discarding the retroactive-adjustment clause."
+    },
+    {
+      "id": "RR-RATE-ADMIN-50",
+      "category": "match-rate",
+      "fundingTrack": "REGULAR",
+      "citation": "Social Security Act s.1903(a)(7)",
+      "rate": {
+        "federal": 50,
+        "state": 50
+      },
+      "activity": "other necessary administrative expense",
+      "confidence": "HIGH",
+      "confidenceNote": "Verified 2026-07-27 against https://www.ssa.gov/OP_Home/ssact/title19/1903.htm. OQ-004 closed. The rate is correctly absent from 42 CFR 433.112 and 433.116 — cite the statute, not Part 433.",
+      "severity": "info",
+      "verbatim": "an amount equal to 50 per centum of the remainder of the amounts expended during such quarter",
+      "scope": "costs \"found necessary by the Secretary for the proper and efficient administration of the State plan\""
+    },
+    {
+      "id": "RR-RATE-REPLACEMENT",
+      "category": "match-rate",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.117(c)-(d)",
+      "appliesTo": [
+        "replacement system"
+      ],
+      "rules": [
+        {
+          "rate": 90,
+          "activity": "design, development, and installation of the replacement, per 42 CFR 433.112"
+        },
+        {
+          "rate": 75,
+          "activity": "operation of an approved replacement system per 42 CFR 433.116(b) through (j), from the date the system met the conditions of initial approval as established by CMS"
+        },
+        {
+          "rate": 75,
+          "activity": "operation of the system BEING REPLACED, until the replacement is in operation and approved — or at a reduced rate determined under 42 CFR 433.120 if the old system has been disapproved"
+        }
+      ],
+      "obligation": "The APD must include the date the replacement system will be in operation and a plan for orderly transition from the system being replaced.",
+      "verbatim": "The agency must submit an APD that includes— (1) The date the replacement system will be in operation; and (2) A plan for orderly transition from the system being replaced to the replacement system.",
+      "source": "42 CFR 433.117(b)(1)-(2), (c), (d)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S2-002",
+        "V-APD-APXE-002"
+      ],
+      "severity": "blocker",
+      "productNote": "Paragraph (d) is commercially useful and rarely understood: a state can keep drawing 75 percent on the legacy system through the transition. Getting this into the budget correctly is a differentiator."
+    },
+    {
+      "id": "RR-CEF-INITIAL",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(b)(1)-(22)",
+      "trigger": "A state seeks 90 percent DDI FFP.",
+      "obligation": "Meet all 22 Conditions for Enhanced Funding and attest to each in APD Appendix C.",
+      "conditionCount": 22,
+      "conditionDetail": "See specs/apd-section-schema.json, sections[APD-APX-C].conditions for the verbatim text of all 22.",
+      "source": "42 CFR 433.112(b)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXC-001",
+        "V-APD-APXC-002"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-CEF-OPERATIONS",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.116(c), (i)",
+      "trigger": "A state seeks 75 percent operations FFP.",
+      "obligation": "At the time of approval, the system must meet all conditions in 42 CFR 433.112(b)(1) through (22). Paragraph (i) separately requires that the standards and conditions in 433.112(b)(10) through (b)(16) be met.",
+      "source": "42 CFR 433.116(c), (i)",
+      "confidence": "HIGH",
+      "confidenceNote": "Verified 2026-07-27: 433.116(c) requires 433.112(b)(1) through (22) at time of approval; 433.116(i) requires 433.112(b)(10) through (b)(16).",
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-CEF-REAPPROVAL-SUBSET",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.119(a)(1)-(a)(4)",
+      "trigger": "CMS conducts a reapproval review of an operating system.",
+      "obligation": "The system must meet 42 CFR 433.112(b)(1), (3), (4), and (7) through (22); the conditions of 42 CFR 433.116(d) through (j); the standards, conditions, and performance standards for reapproval and the system requirements in Part 11 of the State Medicaid Manual; and all subpart requirements within the appropriate period CMS determines should apply under 42 CFR 433.123(b).",
+      "appliesOnReapproval": [
+        "b1",
+        "b3",
+        "b4",
+        "b7",
+        "b8",
+        "b9",
+        "b10",
+        "b11",
+        "b12",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b17",
+        "b18",
+        "b19",
+        "b20",
+        "b21",
+        "b22"
+      ],
+      "excludedOnReapproval": [
+        "b2",
+        "b5",
+        "b6"
+      ],
+      "verbatim": "The system meets the requirements of § 433.112(b)(1), (3), (4), and (7) through (22).",
+      "source": "42 CFR 433.119(a)(1)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXC-010",
+        "V-OAPD-APXC-002"
+      ],
+      "severity": "blocker",
+      "productNote": "The reapproval condition set is a strict subset of the initial-approval set — (b)(2), (b)(5) and (b)(6) drop out. Also note the range asymmetry on 433.116: initial approval requires (c) through (i) per 433.114(a); reapproval requires (d) through (j). Do not conflate them. Most generic compliance tools will."
+    },
+    {
+      "id": "RR-REAPPROVAL-CADENCE",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.119(a), (b)",
+      "trigger": "CMS periodically reviews each system operation initially approved under 42 CFR 433.114.",
+      "obligation": "Maintain compliance continuously.",
+      "cadence": null,
+      "cadenceNote": "NO FIXED INTERVAL IS STATED. The regulation says only that CMS 'periodically reviews'. Do not represent an annual, biennial, or triennial reapproval cadence as a regulatory requirement — no such number exists in 42 CFR 433.119.",
+      "scopeOfReview": "CMS may review an entire system operation or focus on parts of it, but at minimum will review standards, system requirements and other conditions of reapproval that have demonstrated weakness in a previous review or reviews.",
+      "source": "42 CFR 433.119(a), (b)",
+      "confidence": "MEDIUM",
+      "confidenceNote": "Introductory clauses were normalized in retrieval; the (b) scope-of-review sentence was quoted. Re-verify (a)'s intro verbatim.",
+      "severity": "info"
+    },
+    {
+      "id": "RR-INITIAL-APPROVAL-PROC",
+      "category": "procedure",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.114(a)-(b)",
+      "trigger": "A state seeks initial approval of a system.",
+      "obligation": "The Medicaid agency must inform CMS in writing that the system meets the conditions specified in 42 CFR 433.116(c) through (i).",
+      "deadline": null,
+      "deadlineNote": "NO DAY-COUNT DEADLINES EXIST IN THE CURRENT 42 CFR 433.114. The section was materially shortened by the April 19, 2011 amendment (76 FR 21974). Any rule register carrying a 60-day CMS determination clock at 433.114 is quoting pre-2011 text and must be corrected.",
+      "consequence": "If CMS disapproves, the notice includes the findings of fact and the procedures for appeal in the context of a reconsideration of the resulting disallowance to the Departmental Appeals Board.",
+      "verbatim": "To obtain initial approval, the Medicaid agency must inform CMS in writing that the system meets the conditions specified in § 433.116(c) through (i).",
+      "source": "42 CFR 433.114(a)",
+      "confidence": "HIGH",
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-FFP-REDUCTION",
+      "category": "consequence",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.119(c)(1); 42 CFR 433.120",
+      "trigger": "CMS determines following a reapproval review that a system no longer meets the conditions for reapproval.",
+      "obligation": null,
+      "consequence": "FFP for system operations is reduced from 75 percent to 50 percent of expenditures, beginning with the first day of the first calendar quarter after CMS issues the written notice to the State. Under 42 CFR 433.120 the reduction applies to 'expenditures related to the operations of non-compliant functionality or system components.' State claims in excess of the reduced FFP rate are disallowed and appealable to the Departmental Appeals Board.",
+      "rateChange": {
+        "from": 75,
+        "to": 50
+      },
+      "effectiveTiming": "first day of the first calendar quarter after CMS issues the written notice",
+      "scopeOfReduction": "expenditures related to the operations of non-compliant functionality or system components",
+      "verbatim": "CMS may reduce FFP from 75 percent to 50 percent for expenditures related to the operations of non-compliant functionality or system components.",
+      "source": "42 CFR 433.120; 42 CFR 433.119(c)(1)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "salesNote": "State this precisely. The reduction reaches the non-compliant functionality or components, NOT automatically the whole system. Overstating it is both wrong and unnecessary — the accurate version is alarming enough."
+    },
+    {
+      "id": "RR-DAB-APPEAL",
+      "category": "procedure",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.121(a)-(c); 45 CFR Part 16",
+      "trigger": "A disallowance concerning a reduction in FFP.",
+      "obligation": "The state Medicaid agency may appeal to the Departmental Appeals Board under 45 CFR Part 16.",
+      "deadline": null,
+      "deadlineNote": "42 CFR 433.121 specifies NO filing deadline in days and no submission location. Procedural details, including deadlines, live in 45 CFR Part 16 — which was NOT retrieved in this pass. See OQ-005.",
+      "limitations": [
+        "Decisions regarding retroactive FFP restoration and the number of quarters covered under 42 CFR 433.122 are NOT subject to administrative appeal to the Departmental Appeals Board (42 CFR 433.121(b)).",
+        "A reconsideration request does NOT postpone the FFP reduction's implementation, though any reduction is subject to retroactive adjustment if required by the Board's determination (42 CFR 433.121(c))."
+      ],
+      "source": "42 CFR 433.121",
+      "confidence": "MEDIUM",
+      "severity": "info",
+      "openQuestionRef": "OQ-005"
+    },
+    {
+      "id": "RR-REAPPROVAL-RESTORE",
+      "category": "consequence",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.122(a)-(b)",
+      "trigger": "FFP was reduced under 42 CFR 433.120(a) and CMS subsequently determines the system meets all current performance standards, system requirements and other conditions of reapproval.",
+      "obligation": null,
+      "consequence": "CMS resumes 75 percent FFP beginning with the quarter following the review determination. CMS may retroactively waive the reduction if it determines the waiver could improve administration of the State Medicaid plan — but cannot waive it for any quarter before the fourth quarter immediately preceding the quarter in which CMS issues the reapproval determination.",
+      "lookBackLimit": {
+        "quarters": 4,
+        "description": "CMS cannot waive the reduction for any quarter before the fourth quarter immediately preceding the quarter of the reapproval determination."
+      },
+      "source": "42 CFR 433.122(a)-(b)",
+      "confidence": "HIGH",
+      "severity": "info"
+    },
+    {
+      "id": "RR-WAIVER-GOODCAUSE",
+      "category": "waiver",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.131(a)-(c)",
+      "trigger": "A state is unable to comply with conditions of approval or reapproval and the noncompliance will cause a percentum reduction in FFP.",
+      "obligation": "Request a waiver; for circumstances beyond the state's control, satisfactorily explain those circumstances.",
+      "consequence": "CMS will waive the FFP reduction attributable to items for which good cause existed.",
+      "limits": [
+        {
+          "type": "good cause duration",
+          "value": "two consecutive quarters",
+          "verbatim": "A waiver of FFP consequences of the failure to meet the conditions of approval or reapproval based upon good cause will not extend beyond two consecutive quarters."
+        },
+        {
+          "type": "circumstances beyond state control",
+          "effect": "When CMS grants the waiver, CMS will also defer all other system deadlines for the same length of time that the waiver applies."
+        },
+        {
+          "type": "non-waivable",
+          "value": "December 31, 2015 deadlines referenced in 42 CFR 433.112(c) and 433.116(j)",
+          "verbatim": "In no case will CMS waive the December 31, 2015 deadlines referenced in § 433.112(c) and § 433.116(j)."
+        }
+      ],
+      "source": "42 CFR 433.131",
+      "confidence": "HIGH",
+      "severity": "info",
+      "productNote": "The two-quarter cap is the single most useful number here and a natural Change Radar rule: a state relying on a good-cause waiver has a hard stop.",
+      "cfrArtifactNote": "42 CFR 433.131(c) bars waiver of \"the December 31, 2015 deadlines referenced in 433.112(c) and 433.116(j)\" — but the current text of both cross-referenced paragraphs runs from April 19, 2011 and contains no December 31, 2015 date. This is a vestigial artifact inside the CFR itself, not a transcription error. Do not \"fix\" the quote."
+    },
+    {
+      "id": "RR-SW-OWNERSHIP",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.617(a); 42 CFR 433.112(b)(5)",
+      "trigger": "Software is designed, developed, installed or improved with 90 percent FFP.",
+      "obligation": "The state must own the software. States and local governments must include procurement clauses ensuring they retain all ownership rights in software or modifications thereof and associated documentation developed with federal funding under this subpart.",
+      "verbatim": "The State owns any software that is designed, developed, installed or improved with 90 percent FFP.",
+      "source": "42 CFR 433.112(b)(5); 45 CFR 95.617(a)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S5-003",
+        "V-APD-APXC-006",
+        "V-PROC-004"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-SW-FEDLICENSE",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.617(b); 42 CFR 433.112(b)(6)",
+      "trigger": "Software is designed, developed, installed or enhanced with 90 percent FFP.",
+      "obligation": "The Department must hold a royalty-free, nonexclusive, and irrevocable license to reproduce, publish, or otherwise use and authorize others to use, for Federal Government purposes, the software, modifications, and documentation.",
+      "verbatim": "The Department has a royalty free, non-exclusive, and irrevocable license to reproduce, publish, or otherwise use and authorize others to use, for Federal Government purposes, software, modifications to software, and documentation that is designed, developed, installed or enhanced with 90 percent FFP.",
+      "source": "42 CFR 433.112(b)(6); 45 CFR 95.617(b)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXC-006",
+        "V-PROC-004"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-SW-COTS-CARVEOUT",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.617(c)",
+      "trigger": "Commercially available proprietary operating systems and vendor software sold at established market prices.",
+      "obligation": "Excluded from the ownership and federal-license provisions of 95.617(a) and (b).",
+      "additionalLimit": "Federal funding is unavailable for proprietary applications software specifically developed for public assistance programs covered under this subpart.",
+      "source": "45 CFR 95.617(c)",
+      "confidence": "MEDIUM",
+      "confidenceNote": "Retrieved through a summarizing layer. The second limb — no federal funding for proprietary applications software developed specifically for covered public assistance programs — is commercially significant and should be re-verified verbatim before it is used in a vendor conversation.",
+      "severity": "error"
+    },
+    {
+      "id": "RR-SW-DOCUMENTATION",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(b)(20)",
+      "trigger": "Systems and modules developed, installed or improved with 90 percent match.",
+      "obligation": "Include documentation of components and procedures such that the systems could be operated by a variety of contractors or other users.",
+      "verbatim": "Systems and modules developed, installed or improved with 90 percent match must include documentation of components and procedures such that the systems could be operated by a variety of contractors or other users.",
+      "source": "42 CFR 433.112(b)(20)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-PROC-002"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-KEY-PERSONNEL",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(b)(19)",
+      "trigger": "Any APD requesting enhanced FFP.",
+      "obligation": "The agency, in writing through the APD, must identify key state personnel by name, type and time commitment assigned to each project.",
+      "verbatim": "The agency, in writing through the APD, must identify key state personnel by name, type and time commitment assigned to each project.",
+      "source": "42 CFR 433.112(b)(19)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S6-001",
+        "V-APD-APXC-004"
+      ],
+      "severity": "blocker",
+      "productNote": "One of the very few CEFs satisfiable or failable on the face of the document. High-value, cheap validator."
+    },
+    {
+      "id": "RR-DURATION-COMMITMENT",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.619; 42 CFR 433.112(b)(8); 45 CFR 95.610(b)(9)",
+      "trigger": "A system is designed, developed, or installed with FFP.",
+      "obligation": "The system shall be used for the period of time specified in the APD, unless the Department determines a shorter period is justified. The APD must state that duration.",
+      "verbatim": "ADP systems designed, developed, or installed with FFP shall be used for a period of time specified in the advance planning document, unless the Department determines that a shorter period is justified.",
+      "source": "45 CFR 95.619",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S9-001",
+        "V-APD-APXC-005"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-CAP-AMEND",
+      "category": "condition",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.631(a)(2)",
+      "trigger": "An APD with development costs is approved.",
+      "obligation": "The State agency shall amend the cost allocation plan required by subpart E of this part to include the approved APD methodology for the identification, assignment and distribution of the development costs.",
+      "verbatim": "The State agency shall amend the cost allocation plan required by subpart E of this part to include the approved APD methodology for the identification, assignment and distribution of the development costs.",
+      "source": "45 CFR 95.631(a)(2)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S10-005"
+      ],
+      "severity": "error",
+      "productNote": "A downstream obligation states routinely forget. Approving the APD is not the end — the Subpart E cost allocation plan must be amended to match. A natural Change Radar follow-up task."
+    },
+    {
+      "id": "RR-COST-DDI-IDENTIFY",
+      "category": "condition",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.631(a)(1), (b)",
+      "trigger": "Claiming FFP for ADP costs.",
+      "obligation": "Development costs must be specifically identified, assigned to specific project cost centers, and distributed to funding sources per the approved APD. Operational costs are identified and assigned per the approved Subpart E cost allocation plan.",
+      "verbatim": "Using its normal departmental accounting system, the State agency shall specifically identify what items of costs constitute development costs, assign these costs to specific project cost centers, and distribute these costs to funding sources based on the specific identification, assignment and distribution outlined in the approved APD",
+      "source": "45 CFR 95.631(a)(1), (b)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S8-003"
+      ],
+      "severity": "blocker",
+      "productNote": "This is the CFR hook for the Budget Engine's DDI-versus-M&O separation. The regulation demands the separation exist in the state's accounting, not just in the APD narrative."
+    },
+    {
+      "id": "RR-ACCESS-SYSTEMS",
+      "category": "condition",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.615; 42 CFR 433.127",
+      "trigger": "Ongoing, for any system receiving FFP.",
+      "obligation": "The State agency must allow the Department access to the system in all of its aspects, including pertinent state staff, design developments, operation, and cost records of contractors and subcontractors, at such intervals as the Department deems necessary.",
+      "consequence": "CMS will terminate FFP at any time if the Medicaid agency fails to provide State and Federal representatives with full access to the system, including on-site inspection (42 CFR 433.127).",
+      "verbatim": "The State agency must allow the Department access to the system in all of its aspects, including pertinent state staff, design developments, operation, and cost records of contractors and subcontractors at such intervals as are deemed necessary by the Department to determine whether the conditions for approval are being met and to determine the efficiency, economy and effectiveness of the system.",
+      "source": "45 CFR 95.615; 42 CFR 433.127",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "productNote": "Termination — not reduction. This is the harshest consequence in the whole regime and it attaches to access denial, not to substantive noncompliance."
+    },
+    {
+      "id": "RR-SECURITY-BIENNIAL",
+      "category": "obligation",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.621",
+      "trigger": "A state agency operating ADP systems with FFP.",
+      "obligation": "Determine security requirements based on recognized industry standards; establish a security plan covering physical security, equipment, software/data, telecommunications, personnel, and contingency planning; designate an ADP Security Manager; conduct periodic risk analyses and reviews whenever significant system changes occur; complete biennial ADP system security reviews covering physical/data security and personnel practices; maintain biennial review reports and supporting documentation for HHS review.",
+      "cadence": "biennial",
+      "source": "45 CFR 95.621",
+      "confidence": "MEDIUM",
+      "confidenceNote": "Retrieved through a summarizing layer; 95.621 was last amended 2024-10-02 (89 FR 80071) so the current text should be re-pulled verbatim. The biennial security review is a real, dateable recurring obligation and belongs in the Ongoing Obligations Engine — but verify the exact wording first.",
+      "severity": "error",
+      "reviewTypes": [
+        "pre-installation",
+        "post-installation",
+        "utilization",
+        "acquisitions (audit-based, under $200,000, for compliance with 2 CFR parts 200 and 300)"
+      ],
+      "productNote": "An overlooked recurring deadline with no CMS reminder attached to it. Good Ongoing Obligations Engine feature."
+    },
+    {
+      "id": "RR-IVV",
+      "category": "condition",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.626",
+      "trigger": "An APD project meets ANY of eight criteria: (1) at risk of missing statutory or regulatory automation deadlines; (2) at risk of failing to meet a critical milestone; (3) indicates need for a new project or total system redesign; (4) developing systems under waivers pursuant to SSA sections 452(d)(3) or 627; (5) at risk of failure, major delay, or cost overrun; (6) fails to timely and completely submit APD updates or other required systems documentation; (7) state procurement policies put the project at risk, including a pattern of failing to pursue competition to the maximum extent feasible; (8) state's failure to adequately involve state program offices in development and implementation.",
+      "obligation": "An Independent Verification and Validation (IV&V) assessment MAY be required. IV&V must be conducted by an entity independent from the State unless the State receives an exception. The IV&V entity must: develop a project workplan provided directly to the Department at the same time it is given to the State; review and make recommendations on project management and technical aspects, reporting results directly to the federal agencies that required the IV&V at the same time it reports to the State; consult stakeholders and assess user involvement; analyze past project performance; provide risk management assessment and capacity planning; and develop performance metrics tracking completion against state milestones.",
+      "procurementRequirement": "The acquisition document and contract for the IV&V provider must include requirements on the experience and skills of key personnel, must specify by name the key personnel who will actually work on the project, and must be submitted to the Department for prior written approval.",
+      "deadline": null,
+      "source": "45 CFR 95.626",
+      "confidence": "HIGH",
+      "severity": "error",
+      "productNote": "Criteria (5) and (6) are computable from project data the Change Radar already holds. A tool that tells a state 'you are now within the IV&V criteria' before CMS does is genuinely valuable — and criteria (6), failure to timely submit APD updates, is self-referential: missing an As-Needed APDU can itself trigger IV&V."
+    },
+    {
+      "id": "RR-EMERGENCY-ACQ",
+      "category": "procedure",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.624",
+      "trigger": "An emergency situation precludes the state from following 45 CFR 95.611.",
+      "obligation": "Submit a request to the Department, in a record, PRIOR to acquisition, containing: a brief description of the ADP equipment and/or services and an estimate of costs; a brief description of the circumstances requiring the state to proceed prior to approval; and a description of the harm that will be caused if the state does not acquire immediately.",
+      "deadlines": [
+        {
+          "days": 14,
+          "obligor": "HHS",
+          "action": "The Department will disapprove in writing, or recognize the emergency and require a formal request."
+        },
+        {
+          "days": 90,
+          "obligor": "State",
+          "from": "the date of the State's initial request",
+          "action": "Submit a formal request for approval including the information specified at 45 CFR 95.611."
+        }
+      ],
+      "consequence": "If the Department approves, FFP is available from the date the State acquires the ADP equipment and services.",
+      "effectiveDate": "1985-12-01",
+      "verbatim": "For ADP equipment and services acquired by a State after December 1, 1985 to meet emergency situations, which preclude the State from following the requirements of § 95.611, the Department will consider providing FFP upon receipt of a request from the State which is reflected in a record.",
+      "source": "45 CFR 95.624",
+      "confidence": "HIGH",
+      "severity": "error",
+      "correctionNote": "Emergency acquisitions are at 45 CFR 95.624, NOT 95.626. 45 CFR 95.626 is Independent Verification and Validation. This correction matters — a research agenda or rule register pointing at 95.626 for emergency acquisitions is citing the wrong section."
+    },
+    {
+      "id": "RR-RECONSIDERATION-NOPRIOR",
+      "category": "procedure",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.623",
+      "trigger": "FFP is denied for ADP equipment or services acquired without prior approval.",
+      "obligation": "The State may request reconsideration by written request to the head of the Federal program office.",
+      "deadline": {
+        "days": 30,
+        "from": "the initial written disallowance determination"
+      },
+      "grantCriteria": [
+        "The state submitted all information required under 45 CFR 95.611, satisfactorily responded to all concerns, and received a final letter of approval; OR",
+        "The acquisition is reasonable, useful and necessary; AND the failure to obtain prior approval was inadvertent (the state did not knowingly avoid the requirement); AND the request was not previously denied by HHS; AND the acquisition otherwise meets all applicable federal and state requirements and would have been approved; AND the state does not have a record of recurrent failures to obtain prior approval"
+      ],
+      "verbatim": "the State may request reconsideration of the disallowance of FFP by written request to the head of the Federal program office within 30 days of the initial written disallowance determination",
+      "source": "45 CFR 95.623",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "productNote": "A 30-day clock that starts the moment a disallowance letter arrives. The CMS Correspondence Hub should start this timer automatically on intake of a disallowance letter. Note the last criterion — a pattern of prior-approval failures poisons future reconsideration requests, which is an argument for the product as institutional memory."
+    },
+    {
+      "id": "RR-DISALLOWANCE-APD",
+      "category": "consequence",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.612",
+      "trigger": "An ADP acquisition approved or modified under 45 CFR 95.611 fails to comply with the criteria, requirements, and other activities described in the approved APD, to the detriment of the proper, efficient, economical and effective operation of the affected program.",
+      "consequence": "Payment of FFP may be disallowed.",
+      "verbatim": "If the Department finds that any ADP acquisition approved or modified under the provisions of § 95.611 fails to comply with the criteria, requirements, and other activities described in the approved APD to the detriment of the proper, efficient, economical and effective operation of the affected program, payment of FFP may be disallowed.",
+      "source": "45 CFR 95.612",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "productNote": "Read the operative words: the disallowance hook is failure to comply with the APD ITSELF, not just with the regulations. Every commitment written into an APD becomes an enforceable condition. This is a strong argument for not over-promising in APD narrative — and a real feature: the product should track APD commitments as obligations."
+    },
+    {
+      "id": "RR-DISALLOWANCE-MAJOR",
+      "category": "consequence",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.635",
+      "trigger": "A major failure to comply with an APD approved under 45 CFR 95.611 or, for Medicaid, the applicable regulations in 42 CFR chapter 4 subchapter C part 433.",
+      "consequence": "All or part of any costs for the system project are subject to disallowance by the Department.",
+      "verbatim": "All or part of any costs for system projects that have a major failure to comply with an APD approved under applicable regulation at § 95.611 ... are subject to disallowance by the Department.",
+      "source": "45 CFR 95.635",
+      "confidence": "HIGH",
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-EQUIP-25K",
+      "category": "threshold",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.641",
+      "trigger": "Equipment with unit acquisition cost over $25,000.",
+      "obligation": "A State may charge only depreciation or use allowances. For ADP equipment, HHS will consider requests for waivers of that restriction, and the waiver request may be submitted as part of the APD.",
+      "threshold": {
+        "amount": 25000,
+        "basis": "unit acquisition cost",
+        "comparator": "exceeds"
+      },
+      "verbatim": "subpart G provides that a State may charge only depreciation or use allowances for equipment with unit acquisition cost of over $25,000. However, for ADP equipment HHS will consider requests for waivers of that restriction. If the acquisition of the equipment is part of an APD that is subject to the prior approval requirements of subpart F, the State may submit the request for a waiver as part of the APD.",
+      "source": "45 CFR 95.641",
+      "confidence": "HIGH",
+      "severity": "warning",
+      "productNote": "Small but real: the waiver rides inside the APD. A state buying hardware over $25,000 per unit should be prompted to include the waiver request rather than discovering the depreciation restriction later."
+    },
+    {
+      "id": "RR-PROCUREMENT-STANDARDS",
+      "category": "condition",
+      "fundingTrack": "BOTH",
+      "citation": "45 CFR 95.613(a)-(b)",
+      "trigger": "Any procurement of ADP equipment and services.",
+      "obligation": "Subject to the procurement standards prescribed by 2 CFR parts 200 and 300, regardless of any conditions for prior approval.",
+      "additionalAuthority": "The Department retains authority to provide greater oversight including requiring a State to comply with 2 CFR 200.319 if it determines the State procurement process is an impediment to competition that could substantially impact project cost or risk of failure.",
+      "exemption": "Service agreements are exempt from these procurement standards.",
+      "verbatim": "Procurements of ADP equipment and services are subject to the procurement standards prescribed by 2 CFR parts 200 and 300 regardless of any conditions for prior approval.",
+      "source": "45 CFR 95.613",
+      "confidence": "HIGH",
+      "lastAmended": "2024-10-02 (89 FR 80071)",
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-CMS-CHANGE-NOTICE",
+      "category": "procedure",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.123(a)-(c)",
+      "trigger": "CMS modifies system requirements or other conditions for approval under 42 CFR 433.112 or 433.116, or modifies performance standards and conditions for reapproval under 433.119.",
+      "obligation": "CMS will publish a Federal Register notice making proposed changes available for public comment, respond to comments in a subsequent notice, and issue the new or modified requirements in the State Medicaid Manual. For changes to approval conditions, CMS will allow 'an appropriate period' for states to comply, determined by complexity and other relevant factors. For reapproval standards, CMS will notify agencies at least one calendar quarter before the review period to which the new standards apply.",
+      "deadlines": [
+        {
+          "value": "an appropriate period",
+          "quantified": false,
+          "note": "NO NUMBER. Any compliance deadline the product derives from a CMS requirement change is an inference, not a regulatory day count, and must be labeled as such."
+        },
+        {
+          "value": "at least one calendar quarter before the review period",
+          "obligor": "CMS",
+          "appliesTo": "modified reapproval standards"
+        }
+      ],
+      "source": "42 CFR 433.123",
+      "confidence": "MEDIUM",
+      "confidenceNote": "Intro clauses normalized in retrieval; enumerated items quoted.",
+      "severity": "info",
+      "openQuestionRef": "OQ-006",
+      "tensionNote": "42 CFR 433.123(a) contemplates modified conditions being issued through Federal Register notice-and-comment and then the State Medicaid Manual. SHO #25-003 mandated a new template set through a State Health Official letter plus PRA clearance. Whether that satisfies 433.123's procedure is an open question worth researching — but do NOT assert either way to a customer without doing that work."
+    },
+    {
+      "id": "RR-TEMPLATE-MANDATE",
+      "category": "obligation",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003; SHO #25-003 FAQ",
+      "effectiveDate": "2026-07-01",
+      "transitionWindow": {
+        "start": "2026-01-01",
+        "end": "2026-06-30"
+      },
+      "ombApproval": "2025-12-23",
+      "trigger": "Any MES APD, OAPD, MDBT, AoA, ORW, PSR, procurement checklist, or SMC intake submission on or after July 1, 2026.",
+      "obligation": "Use the current CMS MES template set.",
+      "verbatim": "After July 1, 2026, no other templates should be used unless a state receives prior approval from CMS.",
+      "source": "SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "caveat": "The letter itself states no OMB approval date; it says actions occur 'Following OMB PRA approval.' The December 23, 2025 date comes from the FAQ. Separately, the reginfo.gov PRA history for OMB 0938-1268 does not show a 2025 approval entry — see OQ-003. Do not assert the OMB control number / approval-date linkage to a customer until reconciled."
+    },
+    {
+      "id": "RR-RPT-ORW",
+      "category": "reporting",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003; SMC Guidance v2.0; 42 CFR 433.112(b)(15)",
+      "effectiveDate": "2026-07-01",
+      "appliesTo": [
+        "non-EVV modules receiving enhanced funding"
+      ],
+      "trigger": "A certified module, or a legacy system in operation for which the state seeks enhanced funding.",
+      "obligation": "Submit monthly operational reports using the Operational Report Workbook, uploaded to the state's metrics folder in the CMS-designated repository (Box, 'State Submission' subfolder).",
+      "cadence": {
+        "captureFrequency": "monthly",
+        "submissionCadence": "monthly"
+      },
+      "deadline": {
+        "cadence": "monthly"
+      },
+      "consequence": "States that do not submit operational reporting will be considered non-compliant with the applicable regulations and could lose enhanced Medicaid FFP or CHIP federal funding.",
+      "verbatim": "States will submit monthly operational reports using the Operational Report Workbook and upload the file to the appropriate metrics file location in the CMS designated repository.",
+      "consequenceVerbatim": "States that do not submit operational reporting will be considered non-compliant with the applicable regulations and could lose enhanced Medicaid FFP or CHIP federal funding.",
+      "source": "SHO #25-003",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "openQuestionRef": "OQ-001"
+    },
+    {
+      "id": "RR-RPT-ORW-EVV",
+      "category": "reporting",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003; SMC Guidance v2.0 Table 2",
+      "appliesTo": [
+        "EVV modules"
+      ],
+      "obligation": "Capture metric data monthly; submit to CMS quarterly on the Table 2 calendar. Monthly submission is optional.",
+      "cadence": {
+        "captureFrequency": "monthly",
+        "submissionCadence": "quarterly",
+        "monthlyOptional": true
+      },
+      "schedule": [
+        {
+          "quarter": "Oct–Dec",
+          "due": "end of March"
+        },
+        {
+          "quarter": "Jan–Mar",
+          "due": "end of June"
+        },
+        {
+          "quarter": "Apr–Jun",
+          "due": "end of September"
+        },
+        {
+          "quarter": "Jul–Sep",
+          "due": "end of December"
+        }
+      ],
+      "verbatim": "the cadence of reporting addresses the timing of report submission to CMS, which will remain quarterly for EVV modules, while the frequency refers to the capture of the metric data within the Operational Report Workbook, which will remain monthly.",
+      "source": "SHO #25-003; SMC Guidance v2.0",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "vocabularyNote": "CMS distinguishes CADENCE (submission timing to CMS) from FREQUENCY (metric data capture). This distinction dissolves the apparent monthly-versus-quarterly contradiction and should be used verbatim in customer conversations."
+    },
+    {
+      "id": "RR-RPT-PSR",
+      "category": "reporting",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003; SHO #25-003 FAQ; SMC Guidance v2.0 Phase 6",
+      "effectiveDate": "2026-07-01",
+      "trigger": "A state pursuing certification, in the Development/DDI phase after IAPD approval leading up to the Certification Review — AND continuing after certification.",
+      "obligation": "Submit a Project Status Report monthly using the CMS template.",
+      "cadence": {
+        "submissionCadence": "monthly"
+      },
+      "postCertification": true,
+      "verbatim": "States pursuing certification will submit a project status report monthly.",
+      "postCertVerbatim": "Even after a state completes certification, they should continue to submit a monthly project status report to support operational risk management.",
+      "contentRule": "Report milestones for the current reporting month only. Include major upcoming milestones for future months.",
+      "source": "SHO #25-003; SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "supersededProcesses": "Since SMC launched in 2022, CMS no longer requires the Project Partnership Understanding or Quarterly Certification Progress Reports; states now submit monthly project status reports."
+    },
+    {
+      "id": "RR-RPT-ORW-AFFIRM",
+      "category": "reporting",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003 FAQ",
+      "trigger": "Submitting an OAPD.",
+      "obligation": "Affirm ORW submission for the specified time frame by including in the OAPD the URL to the state's Metrics folder.",
+      "verbatim": "affirm that they submitted an ORW for the specified time frame by including the URL in the OAPD to their Metrics folder",
+      "source": "SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-OAPD-APXD-001"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-EVIDENCE-HISTORY",
+      "category": "reporting",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003 FAQ",
+      "trigger": "Preparing for a certification review, or preparing an APD submission.",
+      "obligation": "Six months of ORW data are required to prepare for a certification review. Twelve months are required for an APD submission, unless the APD is submitted less than 12 months after certification.",
+      "thresholds": {
+        "certificationReview": {
+          "months": 6
+        },
+        "apdSubmission": {
+          "months": 12,
+          "exception": "APD submitted less than 12 months after certification"
+        }
+      },
+      "source": "SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-OAPD-APXD-002"
+      ],
+      "severity": "error",
+      "productNote": "A state that starts reporting late cannot retroactively manufacture 12 months of history. This makes early ORW discipline a gating item for the next APD — and is a strong reason a state buys the tool before it needs it."
+    },
+    {
+      "id": "RR-ORW-METRIC-RULES",
+      "category": "data-integrity",
+      "fundingTrack": "ENHANCED",
+      "citation": "Operational Report Workbook (OMB 0938-1268)",
+      "obligation": "ORW data integrity rules.",
+      "rules": [
+        {
+          "rule": "Metric ID format",
+          "value": "[StateAbbreviation]-CR-[ModuleAbbreviation]-[OutcomeNumber].[ConsecutiveNumber] for CMS-required outcomes; -ST- replaces -CR- for state-specific outcomes."
+        },
+        {
+          "rule": "ID reuse",
+          "value": "Do not reuse Metric IDs.",
+          "verbatim": true
+        },
+        {
+          "rule": "OAPD Metric Status",
+          "enum": [
+            "Active",
+            "Ended"
+          ],
+          "note": "Ending a metric requires CMS State Officer approval."
+        },
+        {
+          "rule": "Value Type",
+          "enum": [
+            "Percentage/Ratio",
+            "Numerical",
+            "List"
+          ],
+          "note": "Numerator and Denominator required only for Percentage/Ratio."
+        },
+        {
+          "rule": "Metric Reporting Frequency",
+          "enum": [
+            "Monthly",
+            "Quarterly",
+            "Annually"
+          ]
+        },
+        {
+          "rule": "Reporting Month format",
+          "value": "MM/DD/YYYY; for quarterly metrics use the first month of the quarter."
+        },
+        {
+          "rule": "File naming",
+          "value": "Operational_Report_[StateAbbreviation]_[ModuleAbbreviation]_[YYYY-MM-DD].xlsx, max 255 characters."
+        },
+        {
+          "rule": "Column integrity",
+          "value": "Do not add, delete, or modify columns.",
+          "verbatim": true
+        },
+        {
+          "rule": "Workbook scope",
+          "value": "All months of one reporting period in a single workbook."
+        },
+        {
+          "rule": "Metric change handling",
+          "value": "When metrics change calculations, create a new Metric ID and mark the old one 'Ended'."
+        }
+      ],
+      "source": "Operational Report Workbook, retrieved via https://www.reginfo.gov/public/do/DownloadDocument?objectID=162299901",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXD-004",
+        "V-APD-APXD-005"
+      ],
+      "severity": "error"
+    },
+    {
+      "id": "RR-PROC-CHECKLIST",
+      "category": "obligation",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003; SHO #25-003 FAQ",
+      "effectiveDate": "2026-07-01",
+      "trigger": "Submitting any procurement instrument to CMS for prior approval.",
+      "obligation": "Include a completed MES Procurement Document Checklist.",
+      "verbatim": "States must use the Procurement Checklist for all procurement instruments, including Requests for Proposal (RFPs), Requests for Quote (RFQs), and other related solicitations.",
+      "source": "SHO #25-003 FAQ",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-PROC-001",
+        "V-APD-S5-006"
+      ],
+      "severity": "blocker"
+    },
+    {
+      "id": "RR-SMC-INTAKE",
+      "category": "obligation",
+      "fundingTrack": "ENHANCED",
+      "citation": "SHO #25-003",
+      "effectiveDate": "2026-07-01",
+      "trigger": "Any module entering the certification process, including MMIS, E&E, and EVV.",
+      "obligation": "Complete the unified SMC Intake Form. The EVV Intake Form is eliminated.",
+      "verbatim": "All modules, including MMIS, E&E, and EVV, will be input into the SMC Intake Form.",
+      "source": "SHO #25-003",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "transitionException": "Any EVV certifications currently scheduled or already underway may continue using the EVV Outcomes-Based Certification process."
+    },
+    {
+      "id": "RR-SMC-CR-OPERATING-PERIOD",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "SMC Guidance v2.0",
+      "trigger": "Scheduling a Certification Review.",
+      "obligation": "The module must operate at least six months before the Certification Review.",
+      "threshold": {
+        "months": 6
+      },
+      "source": "SMC Guidance v2.0 (2025-10-21)",
+      "confidence": "MEDIUM",
+      "severity": "error",
+      "relatedRules": [
+        "RR-EVIDENCE-HISTORY"
+      ]
+    },
+    {
+      "id": "RR-CERT-NOT-REQUIRED-STILL-REPORT",
+      "category": "obligation",
+      "fundingTrack": "ENHANCED",
+      "citation": "MES APD template Appendix E; 42 CFR 433.112(b)(15)",
+      "trigger": "A module that may not require certification but receives enhanced funding.",
+      "obligation": "The state may still qualify for enhanced funding and is required to provide data through operational reporting per 42 CFR 433.112(b)(15).",
+      "verbatim": "if a module may not need certification, the state may still qualify to receive enhanced funding and be required to provide data through operational reporting as per 42 CFR § 433.112(b)(15)",
+      "source": "MES APD template, Appendix E",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXE-004"
+      ],
+      "severity": "error",
+      "productNote": "No-certification does not mean no-reporting. A common and expensive misunderstanding."
+    },
+    {
+      "id": "RR-CE-DEADLINE",
+      "category": "deadline",
+      "fundingTrack": "PROGRAM",
+      "citation": "P.L. 119-21 s.71119(a); SSA s.1902(xx); CMS-2454-IFC, 91 FR 33348",
+      "effectiveDate": "2026-07-31",
+      "trigger": "A state provides Medicaid coverage to 'applicable individuals' as defined in SSA s.1902(xx).",
+      "obligation": "Condition Medicaid eligibility for applicable individuals on demonstration of community engagement.",
+      "deadline": {
+        "date": "2027-01-01",
+        "note": "States may implement earlier, provided certain conditions are met."
+      },
+      "verbatim": "States that provide Medicaid coverage to applicable individuals as defined in section 1902(xx) of the Act generally must comply with the community engagement requirement no later than January 1, 2027; States may implement the community engagement requirement earlier, provided that certain conditions are met.",
+      "source": "CMS-2454-IFC preamble, 91 FR 33348",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "litigationStatus": {
+        "case": "Commonwealth of Massachusetts, et al. v. Mehmet Oz, M.D., et al.",
+        "docket": "1:26-cv-12962 (D. Mass.)",
+        "filed": "2026-06-29",
+        "statusAsOf": "2026-07-27",
+        "status": "Complaint filed; preliminary injunction motion pending with no hearing date set. NO ruling, injunction, TRO, or stay. The January 1, 2027 deadline stands and the rule takes effect July 31, 2026.",
+        "plaintiffCount": "Sources conflict: complaint caption lists 26 jurisdictions; Mass. AG describes 26 states plus DC plus two governors; Georgetown CCF says 25 states plus DC. Safe formulation: 'a coalition of 25-26 states and the District of Columbia, with Kentucky and Pennsylvania joining through their governors.'",
+        "recheckBefore": "every customer conversation"
+      }
+    },
+    {
+      "id": "RR-CE-ENHANCED-FFP",
+      "category": "funding-opportunity",
+      "fundingTrack": "ENHANCED",
+      "citation": "CMCS Informational Bulletin, December 8, 2025",
+      "trigger": "A state incurs Medicaid agency IT system costs necessary to support the community engagement requirements.",
+      "obligation": "Approval of enhanced match requires the submission of an Advance Planning Document (APD).",
+      "opportunity": "Costs MAY BE ELIGIBLE for enhanced FFP. A state MAY SUBMIT an APD requesting 90/10 for DDI of MES initiatives, and MAY ALSO SUBMIT an APD to request 75/25 for ongoing operations of CMS-approved systems.",
+      "deadline": null,
+      "deadlineNote": "NO APD SUBMISSION DEADLINE IS STATED in the bulletin.",
+      "verbatim": "Certain state Medicaid agency IT system costs necessary to support the community engagement requirements may be eligible for enhanced federal financial participation (FFP).",
+      "verbatim2": "A state may submit an APD requesting approval for 90/10 enhanced match for the design, development, and installation of their Medicaid Enterprise Systems (MES) initiatives contributing to the economic and efficient operation of the program.",
+      "verbatim3": "States may also submit an APD to request 75/25 enhanced match for ongoing operations of CMS-approved systems.",
+      "source": "CMCS Informational Bulletin, 2025-12-08",
+      "confidence": "HIGH",
+      "severity": "info",
+      "salesGuardrail": "Quote the conditional verbs. 'May be eligible' and 'may submit' are the operative words. Never paraphrase into an entitlement, and never state or imply an APD deadline the bulletin does not set."
+    },
+    {
+      "id": "RR-CE-GRANTS",
+      "category": "funding-opportunity",
+      "fundingTrack": "PROGRAM",
+      "citation": "CMCS Informational Bulletin, November 18, 2025; P.L. 119-21",
+      "amount": 200000000,
+      "fiscalYear": "FY2026",
+      "allocation": [
+        {
+          "amount": 100000000,
+          "method": "distributed equally across states"
+        },
+        {
+          "amount": 100000000,
+          "method": "ratio of individuals subject to the community engagement requirement to the total number of such individuals residing in all states as of March 31, 2025"
+        }
+      ],
+      "verbatim": "$100 million to be distributed equally across states. $100 million in an amount for each state reflecting the ratio of individuals subject to the community engagement requirement to the total number of such individuals residing in all states as of March 31, 2025.",
+      "source": "CMCS Informational Bulletin, 2025-11-18",
+      "confidence": "HIGH",
+      "severity": "info",
+      "analysisNote": "Georgetown CCF's analysis is that $200M is far below real implementation cost. The enhanced match, not the grant, is where the money is. The second $100M tranche concentrates in expansion states in practice but is not legally limited to them."
+    },
+    {
+      "id": "RR-CE-GOODFAITH-EXEMPTION",
+      "category": "waiver",
+      "fundingTrack": "PROGRAM",
+      "citation": "42 CFR 435.560 (as established by CMS-2454-IFC); SSA s.1902(xx)(11)",
+      "effectiveDate": "2026-07-31",
+      "trigger": "A state cannot implement the community engagement requirement by the deadline.",
+      "obligation": "Submit an exemption request demonstrating good faith efforts to comply.",
+      "expiration": {
+        "date": "2028-12-31",
+        "verbatim": "Any such exemptions will expire no later than December 31, 2028.",
+        "source": "CMCS Informational Bulletin, 2025-11-18"
+      },
+      "verbatimTextStatus": "NOT RETRIEVED",
+      "verbatimTextNote": "The verbatim regulatory text of 42 CFR 435.560 could not be retrieved as of 2026-07-27. Ten documented retrieval attempts failed: every full-text route truncates before the amendatory text at the end of a 134-page Federal Register document, and eCFR and Cornell LII both return 404 because the rule is not codified until it takes effect on July 31, 2026. Secondary-source renderings of the section's contents (Georgetown CCF, NORD) exist and disagree with each other on the section range; they were deliberately NOT admitted to this register.",
+      "fix": "Re-pull https://www.ecfr.gov/current/title-42/section-435.560 on or just after 2026-07-31.",
+      "source": "CMCS Informational Bulletin, 2025-11-18; CMS-2454-IFC (text not retrieved)",
+      "confidence": "UNVERIFIED",
+      "severity": "info",
+      "openQuestionRef": "OQ-007"
+    },
+    {
+      "id": "RR-EE-PRIORITIZATION",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "MES APD template, Section 7",
+      "appliesTo": [
+        "E&E projects"
+      ],
+      "obligation": "Prioritize activities in the following order: (1) delivery performance tuning for Medicaid MAGI determinations, including accuracy and efficiency and optimization of real-time eligibility determinations; (2) delivery of additional Medicaid MAGI functionality based upon any new federal or state requirements; (3) dynamic notices to beneficiaries; (4) delivery of non-MAGI functionality.",
+      "verbatim": "Prioritize, in the following order: delivery performance tuning for Medicaid Modified Adjusted Gross Income (MAGI) determinations (including accuracy and efficiency, and optimization of real-time eligibility determinations); delivery of additional Medicaid MAGI functionality based upon any new federal or state requirements; dynamic notices to beneficiaries; and delivery of non-MAGI functionality.",
+      "source": "MES APD template, Section 7",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-S7-004"
+      ],
+      "severity": "warning",
+      "productNote": "Directly relevant to community-engagement E&E work. Community engagement verification, exemptions, noticing and appeals must be sequenced against this order, and 'dynamic notices to beneficiaries' sits at priority 3."
+    },
+    {
+      "id": "RR-EE-MAGI-CEF",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(b)(17)",
+      "appliesTo": [
+        "E&E systems"
+      ],
+      "obligation": "The State must have delivered acceptable MAGI-based system functionality, demonstrated by performance testing and results based on critical success factors, with limited mitigations and workarounds.",
+      "verbatim": "For E&E systems, the State must have delivered acceptable MAGI-based system functionality, demonstrated by performance testing and results based on critical success factors, with limited mitigations and workarounds.",
+      "source": "42 CFR 433.112(b)(17)",
+      "confidence": "HIGH",
+      "validatorRefs": [
+        "V-APD-APXC-007"
+      ],
+      "severity": "blocker",
+      "productNote": "A state with known MAGI performance problems has a real 90-percent-match exposure on new E&E work. This is the condition that makes community-engagement funding requests non-automatic."
+    },
+    {
+      "id": "RR-MITA-ALIGNMENT",
+      "category": "condition",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.112(b)(11)",
+      "obligation": "Align to, and advance increasingly, in MITA maturity for business, architecture, and data.",
+      "threshold": null,
+      "thresholdNote": "The regulation names NO specific maturity level and NO required rate of advancement. There is no numeric threshold to validate against.",
+      "verbatim": "Align to, and advance increasingly, in MITA maturity for business, architecture, and data.",
+      "source": "42 CFR 433.112(b)(11)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "maturityModel": {
+        "levels": 5,
+        "note": "MITA 3.0 Business Capability Matrix (v3.0, May 2014) defines five levels. Per the MITA Business Process Model White Paper: 'Business processes can have from one to five Maturity Levels of business capabilities... Not every business process will have five levels of capability.' Do not assume five levels everywhere."
+      },
+      "ssaStatus": "DISPUTED — see CONFLICT-006 in apd-section-schema.json. SMC Guidance v2.0 (2025-10-21) deleted the State Self-Assessment section that v1.0 contained; SHO #25-003, its FAQ and the current MES APD template never mention MITA outside CEF 11; but the MITA Governance Board FAQ still asserts the SS-A is required. Do NOT build a hard SS-A gate.",
+      "ssaCadence": "NO CMS PRIMARY SOURCE for an annual SS-A cadence. CIB 2013-07-05 states a one-time trigger (within twelve months of MITA 3.0 release, with 90 percent FFP for completing it); CIB 2014-08-05 says CMS 'is encouraging' completion and 'Upon receipt of state submission, CMS will consider this requirement met.' The 'annual' figure traces to state and vendor documents. Labeled ASSUMPTION.",
+      "openQuestionRef": "OQ-008"
+    },
+    {
+      "id": "RR-PA-EXEMPTION-REG",
+      "category": "prior-approval",
+      "fundingTrack": "REGULAR",
+      "citation": "45 CFR 95.611(b)(1)(iii)(A)-(C)",
+      "trigger": "REGULAR FFP ONLY. An acquisition is summarized in an approved Planning, Annual or As-Needed APDU with sufficient detail, complies with the exemption terms, and is not an initial high-risk activity such as software development.",
+      "obligation": "Acquisition documents are exempt from separate prior approval.",
+      "verbatim": "Acquisition documents receive exemption from prior approval if the Planning, Annual or As-Needed APDU approval shows: sufficient detail; compliance with exemption terms; and the acquisition is not initial high-risk activity like software development",
+      "source": "45 CFR 95.611(b)(1)(iii)",
+      "confidence": "MEDIUM",
+      "severity": "info",
+      "applicabilityWarning": "REGULAR FFP ONLY. Paragraph (b)(1) is headed 'For regular FFP requests.' There is no counterpart in (b)(2). NEVER apply this exemption to Medicaid MES enhanced-match work.",
+      "productGuardrail": "APD Studio must never assert an exemption on its own. Surface it as a possibility and require human confirmation."
+    },
+    {
+      "id": "RR-RATE-EE-OPS-75",
+      "category": "match-rate",
+      "fundingTrack": "ENHANCED",
+      "citation": "42 CFR 433.116(j)",
+      "appliesTo": [
+        "E&E M&O"
+      ],
+      "rate": {
+        "federal": 75,
+        "state": 25
+      },
+      "effectiveDate": "2011-04-19",
+      "verbatim": "Beginning, and no earlier than, April 19, 2011, FFP is available at 75 percent of a State's expenditures for the operation of an E&E system that meets the requirements of this subpart.",
+      "source": "42 CFR 433.116(j)",
+      "confidence": "HIGH",
+      "severity": "blocker",
+      "reapprovalNote": "433.116(j) is INSIDE the reapproval range (d)-(j) per 433.119(a)(2) but OUTSIDE the initial-approval range (c)-(i) per 433.114(a)."
+    },
+    {
+      "id": "RR-PA-ENH-TEXTUAL-TENSION",
+      "category": "interpretation",
+      "fundingTrack": "ENHANCED",
+      "citation": "45 CFR 95.611(a)(2)(ii) vs 45 CFR 95.611(b)(2)(i)-(ii) and 42 CFR 433.112(a)",
+      "issue": "45 CFR 95.611(a)(2) frames the general enhanced prior-approval requirement as: 'A State must obtain prior approval ... at the enhanced matching rate subject to one of the following: ... (ii) If authorized by 42 CFR part 433, subpart C, if the contract is anticipated to or will exceed $500,000.' Read alone, that appears to condition enhanced prior approval on the $500,000 threshold, which sits awkwardly against (b)(2)(i)-(ii) requiring PAPD and IAPD approval with no threshold.",
+      "ourPosition": "PAPDs and IAPDs require prior approval regardless of dollar amount. Paragraph (a)(2)(ii)'s $500,000 figure governs CONTRACTS, not APDs; (b)(2)(i)-(ii) state the APD requirement without threshold; and 42 CFR 433.112(a) independently conditions 90 percent FFP on APD approval prior to expenditure with no dollar floor.",
+      "confidence": "HIGH on the position; the textual tension is real and recorded so it is not invisible.",
+      "severity": "info",
+      "productNote": "This is exactly the kind of hook a state's counsel raises. Better to have the answer ready than to be surprised by it."
+    }
+  ],
+  "openQuestions": [
+    {
+      "id": "OQ-001",
+      "title": "Does the annual OAPD-supporting operational report survive alongside the monthly ORW?",
+      "status": "OPEN",
+      "detail": "SMDL #22-001 and SMC Guidance v1.0 required annual operational reports in support of the OAPD request. SHO #25-003 and SMC Guidance v2.0 require monthly ORW submission. SHO #25-003 does not say it eliminated the annual OAPD-linked submission. CMS's own MES Certification Repository states both: the Ongoing Reporting index page says annual only; the Ongoing Reporting Overview page says monthly AND quarterly-EVV AND annual-with-OAPD simultaneously.",
+      "affects": "Ongoing Obligations Engine cadence logic",
+      "resolveBy": "Confirm with a CMS MES State Officer before hard-coding cadence.",
+      "doNot": "Never assert a flat 'everything is monthly' to a customer."
+    },
+    {
+      "id": "OQ-002",
+      "title": "Annual APDU filing deadline — is it 60 days before approval expiration?",
+      "status": "CLOSED 2026-07-27",
+      "detail": "The '60 days before the current approval expires' figure is asserted in project materials but no primary-source text carrying it was retrieved in this pass. 45 CFR 95.611(c)(2)(i) was retrieved as stating only that an Annual APDU is required.",
+      "affects": "RR-DEADLINE-ANNUAL-APDU; the Ongoing Obligations Engine's most visible deadline",
+      "resolveBy": "Pull verbatim text of 45 CFR 95.610(c)(1) and 95.611(c)(2)(i) from eCFR.",
+      "priority": "HIGH — this is a deadline the product would display prominently.",
+      "resolution": "The deadline is real and verbatim at 45 CFR 95.610(c)(1): \"The Annual APDU, which is due 60 days prior to the expiration of the FFP approval, includes:\". Verified on eCFR and Cornell LII. The register had hung it off 45 CFR 95.611(c)(2)(i), whose full text is only \"For an Annual APDU.\""
+    },
+    {
+      "id": "OQ-003",
+      "title": "The reginfo.gov PRA record does not corroborate the December 23, 2025 OMB approval",
+      "status": "OPEN",
+      "detail": "reginfo.gov PRA history for OMB 0938-1268 returns four entries, the most recent being 202409-0938-001, 'Reinstatement without change,' received 09/04/2024, concluded 10/23/2024. No 2025 entry and no pending submission. Yet the FAQ states OMB approval on 2025-12-23, the templates carry 0938-1268, and the retrieved APD template shows 'Expires: TBD'. CMS's PRA listing still titles the collection under the legacy E&E IAPD name.",
+      "affects": "Credibility in a customer conversation",
+      "resolveBy": "CMS MES mailbox (MES@cms.hhs.gov) or a State Officer.",
+      "doNot": "Do not assert the OMB control number / approval-date linkage until reconciled."
+    },
+    {
+      "id": "OQ-004",
+      "title": "Statutory basis for the 50 percent administrative match rate",
+      "status": "CLOSED 2026-07-27",
+      "detail": "The 50 percent rate is not stated in 42 CFR 433.112 or 433.116 but appears as columns in the MES APD Table D and the MDBT. It derives from the Social Security Act, most likely s.1903(a)(7), which was not retrieved in this pass.",
+      "resolveBy": "Pull SSA s.1903(a) and cite the correct paragraph.",
+      "priority": "MEDIUM — we should never cite a rate without its authority.",
+      "resolution": "Social Security Act s.1903(a)(7). Verified against ssa.gov. Also captured: SSA s.1903(a)(3)(A) is the statutory authority for the 90 percent DDI rate and s.1903(a)(3)(B) for the 75 percent operations rate."
+    },
+    {
+      "id": "OQ-005",
+      "title": "DAB appeal filing deadline",
+      "status": "OPEN",
+      "detail": "42 CFR 433.121 specifies no filing deadline in days and no submission location; it points to 45 CFR Part 16. Part 16 was not retrieved in this pass.",
+      "affects": "CMS Correspondence Hub deadline tracking",
+      "resolveBy": "Retrieve 45 CFR Part 16."
+    },
+    {
+      "id": "OQ-006",
+      "title": "Does SHO #25-003 satisfy 42 CFR 433.123's procedure for modifying conditions?",
+      "status": "OPEN",
+      "detail": "42 CFR 433.123(a) contemplates Federal Register notice-and-comment followed by issuance in the State Medicaid Manual. SHO #25-003 mandated a new template set through a State Health Official letter plus PRA clearance.",
+      "resolveBy": "Research. Do not assert either way to a customer.",
+      "priority": "LOW for product logic, but a State Officer or a state's counsel may raise it."
+    },
+    {
+      "id": "OQ-007",
+      "title": "42 CFR 435.560 verbatim text (community engagement good faith effort exemption)",
+      "status": "OPEN — resolvable on a known date",
+      "detail": "Not codified as of 2026-07-27. Ten documented retrieval attempts failed. Secondary sources (Georgetown CCF, NORD) disagree with each other on the new section range and were not admitted.",
+      "resolveBy": "Re-pull https://www.ecfr.gov/current/title-42/section-435.560 on or just after 2026-07-31.",
+      "priority": "HIGH"
+    },
+    {
+      "id": "OQ-008",
+      "title": "Is the MITA State Self-Assessment still expected with an APD?",
+      "status": "OPEN",
+      "detail": "SMC Guidance v2.0 deleted the SS-A section; the MITA Governance Board FAQ still asserts the requirement. Neither CMS source acknowledges the other.",
+      "resolveBy": "CMS MES State Officer.",
+      "doNot": "Do not build a hard SS-A gate; make it configurable and surface the conflict."
+    },
+    {
+      "id": "OQ-009",
+      "title": "Part 11 of the State Medicaid Manual",
+      "status": "OPEN",
+      "detail": "42 CFR 433.112(b)(2) and 433.119(a)(3) both make the system requirements, standards, conditions and performance standards in Part 11 of the State Medicaid Manual a funding condition, 'as periodically amended.' Part 11 was not retrieved in this pass.",
+      "affects": "We cannot currently validate against a load-bearing condition. CEF 2 is un-checkable today.",
+      "resolveBy": "Locate and index the current State Medicaid Manual Part 11.",
+      "priority": "HIGH"
+    },
+    {
+      "id": "OQ-010",
+      "title": "Is an APD Studio license itself APD-fundable as an administrative or systems cost?",
+      "status": "OPEN",
+      "detail": "Carried forward from the project's standing instructions. The highest-leverage unknown in the business model. Note 42 CFR 433.112(c)(2) expressly makes initial COTS licensing and integration costs 90-percent eligible when 'the nature and extent of such costs must be expressly described in the approved APD' — that is the most promising hook found in this pass, but it has not been analyzed or verified for this use case.",
+      "resolveBy": "R8 procurement path analysis. Do not assume.",
+      "priority": "HIGHEST for go-to-market"
+    }
+  ],
+  "correctionsToPriorProjectAssumptions": [
+    {
+      "assumption": "The AoA template standardizes Section 5 of the APD / Appendix A of the OAPD.",
+      "finding": "SHO #25-003 does say this verbatim, but the PUBLISHED templates and the FAQ place the AoA at APD Section 3 (reference) plus Appendix B (full document). APD Section 5 is Acquisitions; OAPD Appendix A is the Proposed Activity Schedule. Build against the templates and FAQ.",
+      "ref": "CONFLICT-001",
+      "severity": "HIGH"
+    },
+    {
+      "assumption": "45 CFR 95.626 governs emergency acquisitions.",
+      "finding": "45 CFR 95.626 is 'Independent Verification and Validation.' Emergency acquisitions are at 45 CFR 95.624.",
+      "severity": "MEDIUM"
+    },
+    {
+      "assumption": "42 CFR 433 Subpart C runs 433.110-433.131 contiguously.",
+      "finding": "The range is correct but the numbering is not contiguous. There is no 433.113, 433.115, 433.118, 433.124-433.126, 433.128, 433.129, or 433.130. Subpart C has thirteen sections.",
+      "severity": "LOW"
+    },
+    {
+      "assumption": "42 CFR 433.112(b) contains '20+ standards'.",
+      "finding": "Exactly 22, (b)(1) through (b)(22). All 22 verbatim texts are captured in apd-section-schema.json.",
+      "severity": "LOW"
+    },
+    {
+      "assumption": "The reporting cadence conflict is unresolved.",
+      "finding": "Mostly resolved. SHO #25-003 supplies the reconciling vocabulary: CADENCE is submission timing to CMS, FREQUENCY is metric capture. Non-EVV: capture monthly, submit monthly. EVV: capture monthly, submit quarterly. What genuinely remains open is whether the annual OAPD-supporting report survives — see OQ-001.",
+      "severity": "MEDIUM"
+    },
+    {
+      "assumption": "MITA 3.0 is current and a MITA 4.0 effort is underway with no confirmed release date.",
+      "finding": "Confirmed. Additional finding: MITA 3.1 exists but was never released; its Member Management guidance is deferred to the next version. Also, the SS-A requirement was silently deleted from SMC Guidance v2.0 while the MITA Governance Board FAQ still asserts it — see OQ-008.",
+      "severity": "MEDIUM"
+    },
+    {
+      "assumption": "42 CFR 433.114 carries a 60-day CMS determination clock.",
+      "finding": "It does not. The current section has no day-count deadlines; it was materially shortened by the April 19, 2011 amendment (76 FR 21974). The 60-day clock that DOES exist is at 45 CFR 95.611(d), and it runs from the Department's acknowledgment of receipt with a 'provisional' approval consequence.",
+      "severity": "MEDIUM"
+    }
+  ]
+}

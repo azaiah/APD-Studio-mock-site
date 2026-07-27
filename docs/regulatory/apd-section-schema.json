@@ -1,0 +1,3350 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema#instance",
+  "meta": {
+    "artifact": "R2 — APD Section Schema",
+    "schemaVersion": "0.2.0",
+    "verifiedAsOf": "2026-07-27",
+    "staleAfter": "2026-10-25",
+    "status": "DRAFT — spine complete for MES APD and MES OAPD; see openGaps",
+    "description": "Machine-readable reverse-engineering of the current CMS Medicaid Enterprise Systems (MES) APD template set, mandatory since 2026-07-01 under SHO #25-003. Every section carries: what content is required, by which APD type, which federal provision demands it, what a CMS State Officer looks for, and the machine-checkable rules that prove it is satisfied. This artifact is the spine of APD Studio; the Authoring Workspace, Compliance Validator, Budget Engine, and AoA Builder all reference section ids and rule ids defined here.",
+    "provenanceLegend": {
+      "RETRIEVED": "Document body fetched and text quotable.",
+      "DERIVED": "Our engineering inference from RETRIEVED source text. Not a CMS statement. Must be reviewed by a human before shipping.",
+      "NOT_RETRIEVED": "Could not obtain. Recorded as a gap, never filled from memory."
+    },
+    "primarySources": {
+      "mesApdTemplate": {
+        "title": "[State] Advanced Planning Document (MES APD)",
+        "distributionUrl": "https://www.medicaid.gov/medicaid/data-and-systems/downloads/mes-apd-template.docx",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162298501",
+        "retrievedFromNote": "CMS Paperwork Reduction Act package PDF conversion of the same template. The .docx is not machine-parsable in this environment.",
+        "ombControlNumber": "0938-1268 (CMS-10536)",
+        "ombExpiration": "TBD on retrieved copy",
+        "burdenEstimate": "60 hours per response",
+        "provenance": "RETRIEVED"
+      },
+      "mesOapdTemplate": {
+        "title": "[State] Operational Advanced Planning Document (MES OAPD)",
+        "distributionUrl": "https://www.medicaid.gov/medicaid/data-and-systems/downloads/mes-oapd-template.docx",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162299001",
+        "provenance": "RETRIEVED"
+      },
+      "aoaTemplate": {
+        "title": "Medicaid Enterprise Systems Analysis of Alternatives",
+        "distributionUrl": "https://www.medicaid.gov/medicaid/data-and-systems/downloads/aoa-template.docx",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162299301",
+        "provenance": "RETRIEVED"
+      },
+      "mdbt": {
+        "title": "MES MDBT + CHIP - Version 1.06 [5/1/2025]",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162299401",
+        "versionRisk": "CRITICAL — SHO #25-003 FAQ states the current version is Unified Version 1.09. Only V1.06 is publicly recoverable. Treat all MDBT structure below as V1.06 and re-verify against V1.09 before the Budget Engine is built against it.",
+        "provenance": "RETRIEVED (V1.06 only)"
+      },
+      "procurementChecklist": {
+        "title": "Medicaid Enterprise Systems Procurement Checklist",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162299601",
+        "ombControlNumber": "0938-1268 (CMS-10536)",
+        "burdenEstimate": "20 hours per response",
+        "provenance": "RETRIEVED"
+      },
+      "whatChangedCrosswalk": {
+        "title": "E&E IAPD Template / MES APD Template — What Changed",
+        "retrievedFrom": "https://www.reginfo.gov/public/do/DownloadDocument?objectID=162300201",
+        "provenance": "RETRIEVED"
+      },
+      "sho25003": {
+        "title": "SHO #25-003 — Streamlining Medicaid Enterprise Systems (MES) Templates to Improve Monitoring and Oversight to Ensure Fiscal Integrity",
+        "date": "2025-08-06",
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/sho25003.pdf",
+        "provenance": "RETRIEVED"
+      },
+      "sho25003Faq": {
+        "title": "State Health Official Letter #25-003: Frequently Asked Questions for States",
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/sho25003-faq.pdf",
+        "provenance": "RETRIEVED"
+      },
+      "cfr45p95sfF": {
+        "title": "45 CFR Part 95, Subpart F",
+        "url": "https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-A/part-95/subpart-F",
+        "titleLastAmended": "2026-07-23",
+        "provenance": "RETRIEVED"
+      },
+      "cfr42p433spC": {
+        "title": "42 CFR Part 433, Subpart C",
+        "url": "https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-C/part-433/subpart-C",
+        "partLastAmended": "2024-10-02 (89 FR 80069)",
+        "provenance": "RETRIEVED"
+      }
+    },
+    "auditHistory": [
+      {
+        "date": "2026-07-27",
+        "type": "adversarial citation audit",
+        "corrections": [
+          "Restored the full verbatim text of 42 CFR 433.116(a) in 2 locations; the prior string truncated at 'approved by CMS' and discarded the retroactive-adjustment clause. These strings are the stated basis for flagship validators V-APD-S8-002 and V-OAPD-S3-001."
+        ],
+        "verifiedClean": [
+          "All 22 CEF texts (five spot-checked character-for-character)",
+          "reapprovalSubset excluding b2, b5, b6",
+          "CONFLICT-004 (OAPDU two-page rule) confirmed genuine — 45 CFR 95.610(c)(3) does say 'no more than two pages'"
+        ]
+      }
+    ]
+  },
+  "documentTypes": {
+    "MES_APD": {
+      "id": "MES_APD",
+      "label": "MES Advance Planning Document",
+      "description": "Unified template covering all four APD submission types in one document.",
+      "mandatorySince": "2026-07-01",
+      "sourceQuote": "States must submit the completed MES APD template for four APD submission types (Planning, Implementation, Update, and As-Needed).",
+      "submissionTypes": [
+        "PAPD",
+        "IAPD",
+        "APDU_ANNUAL",
+        "APDU_AS_NEEDED"
+      ]
+    },
+    "MES_OAPD": {
+      "id": "MES_OAPD",
+      "label": "MES Operational Advance Planning Document",
+      "description": "Annual operational APD for systems in maintenance and operations.",
+      "mandatorySince": "2026-07-01",
+      "structuralBasis": "45 CFR 95.610",
+      "sourceQuote": "The structure of the OAPD template is different and focuses on the submission requirements in the regulation. Please refer to 45 CFR 95.610.",
+      "sourceRef": "sho25003Faq",
+      "cadence": "annual",
+      "cadenceQuote": "States must submit an OAPD for every project in their annual update"
+    }
+  },
+  "submissionTypes": {
+    "PAPD": {
+      "label": "Planning APD",
+      "cfrBasis": "45 CFR 95.610(a)",
+      "priorApprovalRequired": true,
+      "priorApprovalBasis": "45 CFR 95.611(b)(2)(i)",
+      "priorApprovalNote": "For enhanced FFP, a Planning APD requires prior approval regardless of dollar amount."
+    },
+    "IAPD": {
+      "label": "Implementation APD",
+      "cfrBasis": "45 CFR 95.610(b)",
+      "priorApprovalRequired": true,
+      "priorApprovalBasis": "45 CFR 95.611(b)(2)(ii)",
+      "priorApprovalNote": "For enhanced FFP, an Implementation APD requires prior approval regardless of dollar amount."
+    },
+    "APDU_ANNUAL": {
+      "label": "Annual APD Update",
+      "cfrBasis": "45 CFR 95.610(c)(1)",
+      "priorApprovalRequired": true,
+      "priorApprovalBasis": "45 CFR 95.611(c)(2)(i)",
+      "deadlineRule": "RR-DEADLINE-ANNUAL-APDU"
+    },
+    "APDU_AS_NEEDED": {
+      "label": "As-Needed APD Update",
+      "cfrBasis": "45 CFR 95.610(c)(2); triggers at 45 CFR 95.611(c)(2)(ii)",
+      "priorApprovalRequired": true,
+      "deadlineRule": "RR-DEADLINE-ASNEEDED-APDU",
+      "triggerRules": [
+        "RR-TRIG-ENH-COST",
+        "RR-TRIG-ENH-SCHEDULE",
+        "RR-TRIG-ENH-PROCUREMENT",
+        "RR-TRIG-ENH-SCOPE",
+        "RR-TRIG-ENH-COSTALLOC",
+        "RR-TRIG-ENH-COSTBENEFIT"
+      ]
+    },
+    "OAPD": {
+      "label": "Operational APD",
+      "cfrBasis": "45 CFR 95.610(c)(3)",
+      "cfrLengthNote": "45 CFR 95.610(c)(3) describes an annual submission of no more than two pages containing summary of activities, acquisitions, and annual budget by project/system. The current CMS MES OAPD template is materially longer than two pages. Recorded as CONFLICT-004."
+    }
+  },
+  "sections": [
+    {
+      "id": "APD-FM",
+      "documentType": "MES_APD",
+      "number": "Front Matter",
+      "title": "Front Matter",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Fill out the front matter table below with all relevant state information.",
+      "regulatoryBasis": [],
+      "reviewerFocus": "Identity of the submitting state, project, and funding stream. A State Officer uses this to route the document.",
+      "validationRules": [
+        {
+          "id": "V-APD-FM-001",
+          "severity": "blocker",
+          "check": "Front matter table is fully populated; no bracketed placeholder text such as [State] remains anywhere in the document.",
+          "machineCheckable": true,
+          "basis": "DERIVED from template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-VH",
+      "documentType": "MES_APD",
+      "number": "Document Version History",
+      "title": "Document Version History",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "requiredFields": [
+        "date",
+        "description",
+        "approver"
+      ],
+      "regulatoryBasis": [],
+      "reviewerFocus": "Traceability of revisions and a named approver.",
+      "productNote": "This is the template's own hook into the Evidence Vault & Audit Trail module. Generate it from the system's version history rather than asking a human to maintain it.",
+      "validationRules": [
+        {
+          "id": "V-APD-VH-001",
+          "severity": "error",
+          "check": "At least one version row exists with a non-empty date, description, and approver.",
+          "machineCheckable": true,
+          "basis": "DERIVED from template fields"
+        },
+        {
+          "id": "V-APD-VH-002",
+          "severity": "warning",
+          "check": "The latest version row's approver is a named individual, not a role or a blank.",
+          "machineCheckable": true,
+          "basis": "DERIVED"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-ES",
+      "documentType": "MES_APD",
+      "number": "Executive Summary",
+      "title": "Executive Summary",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Draft a brief executive summary (one or two paragraphs)",
+      "contentRequirements": [
+        {
+          "id": "APD-ES-R1",
+          "text": "Funding type — MMIS or E&E",
+          "machineCheckable": true
+        },
+        {
+          "id": "APD-ES-R2",
+          "text": "Project name and year",
+          "machineCheckable": true
+        },
+        {
+          "id": "APD-ES-R3",
+          "text": "Alignment with prior APDs",
+          "machineCheckable": false
+        },
+        {
+          "id": "APD-ES-R4",
+          "text": "Medicaid benefits of the project",
+          "machineCheckable": false
+        },
+        {
+          "id": "APD-ES-R5",
+          "text": "Whether the solution is state-developed or COTS",
+          "machineCheckable": true
+        }
+      ],
+      "regulatoryBasis": [],
+      "reviewerFocus": "Whether the State Officer can tell, in 30 seconds, what is being asked for and under which funding stream.",
+      "validationRules": [
+        {
+          "id": "V-APD-ES-001",
+          "severity": "error",
+          "check": "Funding type is declared and is one of {MMIS, E&E}.",
+          "machineCheckable": true,
+          "basis": "DERIVED from template content list"
+        },
+        {
+          "id": "V-APD-ES-002",
+          "severity": "error",
+          "check": "Solution type is declared and is one of {state-developed, COTS, hybrid}; the declared value is consistent with the preferred solution in the AoA (APD-APX-B) and with the Section 5 acquisition summary.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        },
+        {
+          "id": "V-APD-ES-003",
+          "severity": "warning",
+          "check": "Length is within one to two paragraphs.",
+          "machineCheckable": true,
+          "basis": "DERIVED from template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S1",
+      "documentType": "MES_APD",
+      "number": "1",
+      "title": "Project Management Plan / Summary of Activities",
+      "titleVariesByType": true,
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "typeSpecificContent": {
+        "PAPD": {
+          "sectionName": "Project Management Plan",
+          "requirements": [
+            "project organization",
+            "personnel roles",
+            "IT team collaboration",
+            "activity description",
+            "methods",
+            "high-level schedule"
+          ],
+          "regulatoryBasis": [
+            {
+              "citation": "45 CFR 95.610(a)(2)(ii)",
+              "quote": "planning project organization, planning activities/deliverables, State and contractor resource needs",
+              "mapping": "DERIVED"
+            }
+          ]
+        },
+        "IAPD": {
+          "sectionName": "Summary of Activities",
+          "requirements": [
+            "results of prior PAPD activities",
+            "activity detail",
+            "methods",
+            "schedule"
+          ],
+          "regulatoryBasis": [
+            {
+              "citation": "45 CFR 95.610(b)(1)",
+              "quote": "Results of Planning APD activities, if any",
+              "mapping": "DERIVED"
+            },
+            {
+              "citation": "45 CFR 95.610(b)(6)",
+              "quote": "A detailed description of the nature and scope of the activities to be undertaken",
+              "mapping": "DERIVED"
+            }
+          ]
+        },
+        "APDU_ANNUAL": {
+          "sectionName": "Project Activity Report",
+          "requirements": [
+            "past year's task status",
+            "degree of completion",
+            "anticipated problems or delays"
+          ],
+          "regulatoryBasis": [
+            {
+              "citation": "45 CFR 95.610(c)(1)(ii)",
+              "quote": "status of the past year's major project tasks and milestones",
+              "mapping": "DERIVED"
+            },
+            {
+              "citation": "45 CFR 95.610(c)(1)(iii)",
+              "quote": "degree of completion for unfinished products",
+              "mapping": "DERIVED"
+            }
+          ]
+        },
+        "APDU_AS_NEEDED": {
+          "sectionName": "Project Activity Report",
+          "requirements": [
+            "past year's task status",
+            "degree of completion",
+            "anticipated problems or delays"
+          ],
+          "regulatoryBasis": [
+            {
+              "citation": "45 CFR 95.610(c)(2)",
+              "mapping": "DERIVED"
+            }
+          ]
+        }
+      },
+      "whatChanged": "Added guidance for four APD types; added Project Management Plan for PAPD. Project management planning moved here from the old Section 5.",
+      "reviewerFocus": "For a PAPD, whether the state has a credible plan to do the planning work it is asking to be paid for. For an APDU, whether slippage is disclosed honestly — this is where a State Officer looks for the schedule slip that should have triggered an As-Needed APDU.",
+      "validationRules": [
+        {
+          "id": "V-APD-S1-001",
+          "severity": "blocker",
+          "check": "Section content matches the submission type: PAPD must contain a Project Management Plan; IAPD must contain a Summary of Activities; APDU must contain a Project Activity Report.",
+          "machineCheckable": true,
+          "basis": "DERIVED from template type-varying instruction"
+        },
+        {
+          "id": "V-APD-S1-002",
+          "severity": "error",
+          "check": "IAPD only — if a PAPD was previously approved for this project, the results of the PAPD activities are reported.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(b)(1)"
+        },
+        {
+          "id": "V-APD-S1-003",
+          "severity": "blocker",
+          "check": "CHANGE RADAR CROSS-CHECK. If the Project Activity Report discloses a milestone slip greater than 60 days, or the narrative discloses a scope or procurement change, the system must confirm an As-Needed APDU was filed within 60 days of the change, or raise the As-Needed APDU obligation now.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(c)(2)(ii)(B)-(D); RR-TRIG-ENH-SCHEDULE",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S1-004",
+          "severity": "error",
+          "check": "APDU only — a risk management plan is referenced or included.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(c)(1)(ii)"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S2",
+      "documentType": "MES_APD",
+      "number": "2",
+      "title": "Statement of Needs and Objectives",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "subsections": [
+        {
+          "id": "APD-S2.1",
+          "number": "2.1",
+          "title": "Medicaid Enterprise System Introduction",
+          "templateInstruction": "Provide a high-level introduction (two to three paragraphs)",
+          "typeSpecificContent": {
+            "PAPD": "purpose/objectives plus a summary of project needs, objectives, and anticipated benefits",
+            "IAPD_APDU": "a statement of purpose, a vision (the roadmap), needs, objectives, and anticipated benefits"
+          }
+        },
+        {
+          "id": "APD-S2.2",
+          "number": "2.2",
+          "title": "Scope of APD Request",
+          "templateInstruction": "Provide a brief description (two to three paragraphs)",
+          "requirements": [
+            "purpose",
+            "objectives",
+            "benefits",
+            "alignment with MES vision",
+            "system effectiveness",
+            "program priority alignment",
+            "how success will be measured"
+          ],
+          "conditionalRequirements": [
+            {
+              "condition": "initial replacement system",
+              "requires": [
+                "date the replacement system will be in operation",
+                "certification plan",
+                "plan for an orderly transition"
+              ],
+              "regulatoryBasis": "42 CFR 433.117(b)(1)-(2)"
+            }
+          ]
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(i)",
+          "quote": "A statement of the problem/need that the existing capabilities can not resolve",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(b)(2)",
+          "quote": "A statement of problems/needs and outcomes/objectives",
+          "appliesTo": [
+            "IAPD"
+          ]
+        },
+        {
+          "citation": "42 CFR 433.117(b)",
+          "quote": "The agency must submit an APD that includes— (1) The date the replacement system will be in operation; and (2) A plan for orderly transition from the system being replaced to the replacement system.",
+          "appliesTo": [
+            "IAPD"
+          ],
+          "conditional": "replacement systems only"
+        }
+      ],
+      "reviewerFocus": "Whether the problem statement is specific enough to justify federal money, and whether the scope described here matches the scope that is budgeted in Section 8 and attested in Appendix C. Vague scope is a top return reason.",
+      "validationRules": [
+        {
+          "id": "V-APD-S2-001",
+          "severity": "error",
+          "check": "A problem/need statement exists and describes a capability gap, not merely a desired technology.",
+          "machineCheckable": false,
+          "basis": "45 CFR 95.610(a)(2)(i)"
+        },
+        {
+          "id": "V-APD-S2-002",
+          "severity": "blocker",
+          "check": "REPLACEMENT SYSTEM GATE. If the project is flagged as a replacement of an existing system, both the operational date of the replacement and a written orderly-transition plan are present.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.117(b)(1)-(2)"
+        },
+        {
+          "id": "V-APD-S2-003",
+          "severity": "error",
+          "check": "At least one measurable success measure is stated, and it reconciles to the outcomes and metrics declared in Appendix D.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency with APD-APX-D"
+        },
+        {
+          "id": "V-APD-S2-004",
+          "severity": "error",
+          "check": "The scope described here is consistent with the activity list in Section 7 and the budgeted activities in Section 8 — no activity is budgeted that is not in scope, and no in-scope activity is unbudgeted.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S3",
+      "documentType": "MES_APD",
+      "number": "3",
+      "title": "Requirements Analysis, Feasibility Study, Analysis of Alternatives Considerations",
+      "requiredBy": {
+        "PAPD": "required (commitment only)",
+        "IAPD": "required (full)",
+        "APDU_ANNUAL": "required (updates)",
+        "APDU_AS_NEEDED": "required (updates)"
+      },
+      "typeSpecificContent": {
+        "PAPD": {
+          "mode": "commitment",
+          "requirements": [
+            "commit to conducting/preparing the problem(s) needs assessment, feasibility study, and Analysis of Alternatives (AoA)",
+            "define functional requirements",
+            "compare system functionality"
+          ],
+          "sourceQuote": "During the PAPD, only a commitment to perform the AoA is required via Section 3.",
+          "sourceRef": "sho25003Faq"
+        },
+        "IAPD_APDU": {
+          "mode": "results",
+          "requirements": [
+            "brief summary of results and methodology",
+            "reference Appendix B for the complete AoA",
+            "provide AoA updates",
+            "include the completed AoA template",
+            "explain if an existing-system transfer was not considered"
+          ],
+          "sourceQuote": "The AoA should be completed and included as part of the initial IAPD (typically referenced within Section 3 and included via Appendix B).",
+          "sourceRef": "sho25003Faq"
+        }
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(v)",
+          "quote": "conduct/prepare the problem(s) needs assessment, feasibility study, alternatives analysis, cost benefit analysis",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(a)(2)(vi)",
+          "quote": "define the State's functional requirements, based on the State's business needs",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(b)(3)",
+          "quote": "Requirements analysis, feasibility study, and statement of alternative considerations",
+          "appliesTo": [
+            "IAPD"
+          ]
+        },
+        {
+          "citation": "42 CFR 433.112(b)(13)",
+          "quote": "Promote sharing, leverage, and reuse of Medicaid technologies and systems within and among States.",
+          "appliesTo": [
+            "IAPD",
+            "APDU_ANNUAL",
+            "APDU_AS_NEEDED"
+          ],
+          "note": "This is the regulatory root of the reuse-first evaluation requirement in the AoA."
+        }
+      ],
+      "reviewerFocus": "Whether the AoA is a real analysis or a retrofit justifying a decision already made. A State Officer looks specifically for whether transfer/reuse of an existing state system was evaluated, and for a defensible explanation if it was not.",
+      "conflictRefs": [
+        "CONFLICT-001"
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-S3-001",
+          "severity": "blocker",
+          "check": "PAPD — an explicit written commitment to conduct the needs assessment, feasibility study, and AoA is present.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(a)(2)(v)"
+        },
+        {
+          "id": "V-APD-S3-002",
+          "severity": "blocker",
+          "check": "IAPD — a completed AoA is attached at Appendix B and referenced from Section 3.",
+          "machineCheckable": true,
+          "basis": "SHO #25-003 FAQ",
+          "conflictRefs": [
+            "CONFLICT-001"
+          ]
+        },
+        {
+          "id": "V-APD-S3-003",
+          "severity": "blocker",
+          "check": "REUSE GATE. Either (a) reuse/transfer of an existing state system is evaluated as an alternative, or (b) an explicit written explanation of why reuse options were not viable is present. Absence of both fails.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(13); AoA template Section 2.2",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S3-004",
+          "severity": "error",
+          "check": "IAPD — functional requirements defined in the PAPD are traceable into the AoA evaluation criteria.",
+          "machineCheckable": false,
+          "basis": "DERIVED"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S4",
+      "documentType": "MES_APD",
+      "number": "4",
+      "title": "Cost-Benefit Analysis",
+      "requiredBy": {
+        "PAPD": "commitment only",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required if proposing new work",
+        "APDU_AS_NEEDED": "required if proposing new work"
+      },
+      "templateInstruction": "PAPD: State will commit to conducting/preparing the cost-benefit analysis. Others: provide it, or indicate CMS exemption; required if proposing new work.",
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(v)",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(b)(4)",
+          "quote": "A cost benefit analysis",
+          "appliesTo": [
+            "IAPD"
+          ]
+        }
+      ],
+      "reviewerFocus": "Whether the benefit case is quantified and whether it ties to the budget. Also the origin of a Change Radar trigger — a later change of more than 10 percent in the cost-benefit estimate requires an As-Needed APDU.",
+      "linkedRules": [
+        "RR-TRIG-ENH-COSTBENEFIT"
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-S4-001",
+          "severity": "blocker",
+          "check": "IAPD — a cost-benefit analysis is present, or an explicit CMS exemption is cited with the date and the granting official.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(b)(4)"
+        },
+        {
+          "id": "V-APD-S4-002",
+          "severity": "error",
+          "check": "The cost side of the cost-benefit analysis reconciles to the Section 8 proposed budget total within a stated tolerance.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation"
+        },
+        {
+          "id": "V-APD-S4-003",
+          "severity": "info",
+          "check": "BASELINE CAPTURE. The approved cost-benefit estimate is stored as the Change Radar baseline for the 10 percent As-Needed APDU trigger.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(c)(2)(ii)(F)"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S5",
+      "documentType": "MES_APD",
+      "number": "5",
+      "title": "Acquisitions",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Provide an acquisition summary",
+      "contentRequirements": [
+        {
+          "id": "APD-S5-R1",
+          "text": "contract type and scope"
+        },
+        {
+          "id": "APD-S5-R2",
+          "text": "procurement strategy"
+        },
+        {
+          "id": "APD-S5-R3",
+          "text": "estimated or not-to-exceed cost"
+        },
+        {
+          "id": "APD-S5-R4",
+          "text": "contract term including option years"
+        },
+        {
+          "id": "APD-S5-R5",
+          "text": "federal/state compliance certification statement"
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(viii)",
+          "quote": "Acquisition summary including type/scope, procurement strategy, estimated cost, timeframe, and statement or certification of compliance with Federal requirements including software ownership retention"
+        },
+        {
+          "citation": "45 CFR 95.610(c)(1)(viii)",
+          "appliesTo": [
+            "APDU_ANNUAL"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.611(b)(2)(iii)",
+          "quote": "Solicitation documents and contracts require prior approval unless exempted, when anticipated to exceed $500,000",
+          "threshold": 500000
+        },
+        {
+          "citation": "45 CFR 95.611(b)(2)(iv)",
+          "quote": "Contract amendments require prior approval for cost increases exceeding $500,000 or time extensions over 60 days",
+          "threshold": 500000
+        },
+        {
+          "citation": "45 CFR 95.613(a)",
+          "quote": "Procurements of ADP equipment and services are subject to the procurement standards prescribed by 2 CFR parts 200 and 300 regardless of any conditions for prior approval."
+        },
+        {
+          "citation": "45 CFR 95.617(a)-(b)",
+          "note": "Software ownership retention and the federal royalty-free license must be secured through procurement clauses."
+        }
+      ],
+      "reviewerFocus": "Whether every acquisition over the enhanced-FFP prior-approval threshold has actually been submitted for prior approval, and whether the required contract clauses are present. Missing prior approval is a disallowance exposure under 45 CFR 95.612 and 95.635.",
+      "linkedRules": [
+        "RR-PA-ENH-CONTRACT",
+        "RR-PA-ENH-AMENDMENT",
+        "RR-PROC-CHECKLIST",
+        "RR-SW-OWNERSHIP",
+        "RR-SW-FEDLICENSE"
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-S5-001",
+          "severity": "blocker",
+          "check": "PRIOR APPROVAL GATE (enhanced FFP). For every acquisition listed with anticipated cost exceeding $500,000, a prior-approval submission exists and is either approved or pending. Unsubmitted acquisitions over threshold fail.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(b)(2)(iii)",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S5-002",
+          "severity": "blocker",
+          "check": "AMENDMENT GATE. For every contract amendment listed, prior approval exists if the cost increase exceeds $500,000 OR the term is extended more than 60 days.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(b)(2)(iv)"
+        },
+        {
+          "id": "V-APD-S5-003",
+          "severity": "blocker",
+          "check": "The federal/state compliance certification statement is present and includes software ownership retention language.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(a)(2)(viii); 45 CFR 95.617"
+        },
+        {
+          "id": "V-APD-S5-004",
+          "severity": "error",
+          "check": "Every acquisition's estimated or not-to-exceed cost reconciles to a corresponding line in the Section 6.2 Vendor Resource Table (Table B) and to the Section 8 budget.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation"
+        },
+        {
+          "id": "V-APD-S5-005",
+          "severity": "warning",
+          "check": "Contract term including option years does not exceed 8 years.",
+          "machineCheckable": true,
+          "basis": "MES Procurement Checklist Table 1 item 12 — CMS recommendation, not a regulation. Advisory only."
+        },
+        {
+          "id": "V-APD-S5-006",
+          "severity": "error",
+          "check": "A completed MES Procurement Document Checklist accompanies every procurement instrument submitted to CMS.",
+          "machineCheckable": true,
+          "basis": "SHO #25-003 FAQ: 'States must use the Procurement Checklist for all procurement instruments, including Requests for Proposal (RFPs), Requests for Quote (RFQs), and other related solicitations.'"
+        }
+      ],
+      "whatChanged": "Refocused on acquisitions because project management planning moved to Section 1.",
+      "conflictRefs": [
+        "CONFLICT-001"
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S6",
+      "documentType": "MES_APD",
+      "number": "6",
+      "title": "Personnel Resource Statement",
+      "requiredBy": {
+        "PAPD": "abbreviated",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "subsections": [
+        {
+          "id": "APD-S6.1",
+          "number": "6.1",
+          "title": "State Resource Statement",
+          "papdInstruction": "Indicate that 'Resource needs are addressed in the Project Management Plan section.'",
+          "otherInstruction": "Personnel resource statement indicating availability of qualified and adequate numbers of staff; project director; staffing estimates; personnel costs; cost-allocation methodology",
+          "table": {
+            "id": "Table A",
+            "name": "State Resource Table",
+            "columns": [
+              "staff title/name",
+              "% of time",
+              "cost with benefits",
+              "responsibilities"
+            ]
+          }
+        },
+        {
+          "id": "APD-S6.2",
+          "number": "6.2",
+          "title": "Contract Resource Statement",
+          "instruction": "Provide an estimate of all contracting requirements and costs; summary of allocation of costs by funding source; detailed narrative outlining methodologies used to determine cost allocation",
+          "table": {
+            "id": "Table B",
+            "name": "Vendor Resource Table",
+            "columns": [
+              "vendor name",
+              "cost category",
+              "total contract cost",
+              "service description/CMS approval status",
+              "contract term"
+            ]
+          }
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(b)(5)",
+          "quote": "Personnel resource statement indicating availability of qualified and adequate numbers of staff"
+        },
+        {
+          "citation": "42 CFR 433.112(b)(19)",
+          "quote": "The agency, in writing through the APD, must identify key state personnel by name, type and time commitment assigned to each project.",
+          "critical": true
+        }
+      ],
+      "reviewerFocus": "Whether key state personnel are named individuals with a stated time commitment. This is one of the few Conditions for Enhanced Funding that is satisfied or failed on the face of the document, which makes it a favorite State Officer check.",
+      "validationRules": [
+        {
+          "id": "V-APD-S6-001",
+          "severity": "blocker",
+          "check": "KEY PERSONNEL BY NAME. Table A contains at least one row where the staff entry is a named individual (not a role, not 'TBD', not 'vacant'), with a stated type and a numeric time commitment. This is the on-the-face test for CEF 19.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(19)",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S6-002",
+          "severity": "error",
+          "check": "A project director is identified by name.",
+          "machineCheckable": true,
+          "basis": "Template requirement; supports 42 CFR 433.112(b)(19)"
+        },
+        {
+          "id": "V-APD-S6-003",
+          "severity": "error",
+          "check": "Every Table A row has a percent-of-time value between 0 and 100, and a cost-with-benefits figure.",
+          "machineCheckable": true,
+          "basis": "DERIVED from table columns"
+        },
+        {
+          "id": "V-APD-S6-004",
+          "severity": "error",
+          "check": "Sum of Table A personnel costs plus Table B contract costs reconciles to the personnel and contractor lines of the Section 8 budget and the MDBT.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S6-005",
+          "severity": "error",
+          "check": "Every Table B vendor row states its CMS approval status, and any vendor with a contract over $500,000 shown as not-approved is cross-flagged to V-APD-S5-001.",
+          "machineCheckable": true,
+          "basis": "DERIVED; 45 CFR 95.611(b)(2)(iii)"
+        },
+        {
+          "id": "V-APD-S6-006",
+          "severity": "error",
+          "check": "A cost-allocation methodology narrative is present in 6.2 and is consistent with Section 10.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S7",
+      "documentType": "MES_APD",
+      "number": "7",
+      "title": "Proposed Activity Schedule for the Project",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Provide a high-level activity schedule describing the nature and scope of system work and methods used to execute the work.",
+      "notes": [
+        "Includes a T-MSIS data handling note.",
+        "References the CMS Division of Business Essential Systems (DBES) Large System Enhancement (LSE) procedure."
+      ],
+      "eAndEPrioritization": {
+        "applies": "E&E projects",
+        "quote": "Prioritize, in the following order: delivery performance tuning for Medicaid Modified Adjusted Gross Income (MAGI) determinations (including accuracy and efficiency, and optimization of real-time eligibility determinations); delivery of additional Medicaid MAGI functionality based upon any new federal or state requirements; dynamic notices to beneficiaries; and delivery of non-MAGI functionality.",
+        "order": [
+          "MAGI determination performance tuning (accuracy, efficiency, real-time optimization)",
+          "additional Medicaid MAGI functionality driven by new federal or state requirements",
+          "dynamic notices to beneficiaries",
+          "non-MAGI functionality"
+        ],
+        "productNote": "Directly relevant to community-engagement (P.L. 119-21 s.71119) E&E work. A state sequencing non-MAGI work ahead of MAGI performance tuning without explanation should be flagged."
+      },
+      "subsections": [
+        {
+          "id": "APD-S7.1",
+          "number": "7.1",
+          "title": "Activity 1 – [Activity Name]",
+          "instruction": "List each activity from Table C separately, and provide as much detail as necessary.",
+          "repeating": true
+        }
+      ],
+      "table": {
+        "id": "Table C",
+        "columns": [
+          "estimated start date",
+          "estimated finish date",
+          "activity description"
+        ]
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(b)(7)",
+          "quote": "The proposed activity schedule for the project"
+        },
+        {
+          "citation": "45 CFR 95.610(c)(1)(iv)",
+          "quote": "Updated project activity schedule",
+          "appliesTo": [
+            "APDU_ANNUAL"
+          ]
+        }
+      ],
+      "reviewerFocus": "Whether milestones are dated and testable. This section is the Change Radar's data feed — the 60-day major-milestone slip trigger is computed against these dates.",
+      "linkedRules": [
+        "RR-TRIG-ENH-SCHEDULE"
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-S7-001",
+          "severity": "error",
+          "check": "Every Table C row has a parseable estimated start date and estimated finish date, and finish is not before start.",
+          "machineCheckable": true,
+          "basis": "DERIVED from table columns"
+        },
+        {
+          "id": "V-APD-S7-002",
+          "severity": "error",
+          "check": "Every Table C activity has a corresponding narrative subsection under 7.x.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-S7-003",
+          "severity": "error",
+          "check": "Every activity in Table C maps to at least one budgeted line in Section 8 and the MDBT, and every budgeted activity appears in Table C.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S7-004",
+          "severity": "warning",
+          "check": "E&E projects — the activity sequence follows the template's stated E&E prioritization order, or a deviation rationale is provided.",
+          "machineCheckable": true,
+          "basis": "Template E&E prioritization instruction"
+        },
+        {
+          "id": "V-APD-S7-005",
+          "severity": "info",
+          "check": "BASELINE CAPTURE. Approved milestone dates are stored as the Change Radar baseline for the 60-day slip trigger.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(c)(2)(ii)(B)"
+        }
+      ],
+      "whatChanged": "Relocated from the old template's Section IX with no content change.",
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S8",
+      "documentType": "MES_APD",
+      "number": "8",
+      "title": "Proposed Budget",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "contentRequirements": [
+        {
+          "id": "APD-S8-R1",
+          "text": "Budget by Federal Fiscal Year (FFY)"
+        },
+        {
+          "id": "APD-S8-R2",
+          "text": "Funding needs by category, cost element, and amount"
+        },
+        {
+          "id": "APD-S8-R3",
+          "text": "In-house versus contractor split"
+        },
+        {
+          "id": "APD-S8-R4",
+          "text": "Federal and state breakdown"
+        },
+        {
+          "id": "APD-S8-R5",
+          "text": "Specify the period within which FFP will be claimed"
+        }
+      ],
+      "table": {
+        "id": "Table D",
+        "name": "State Proposed Budget",
+        "columns": [
+          "90% Federal Share",
+          "75% Federal Share",
+          "50% Federal Share",
+          "10% State Share",
+          "25% State Share",
+          "50% State Share",
+          "Total"
+        ]
+      },
+      "subsections": [
+        {
+          "id": "APD-S8.1",
+          "number": "8.1",
+          "title": "Medicaid Detail Budget Table (MDBT)",
+          "instruction": "MDBT must be submitted with this APD for all MMIS or E&E funding requests. It is optional to include a copy of the MDBT in this section.",
+          "note": "Tables F and G are MDBT samples."
+        },
+        {
+          "id": "APD-S8.2",
+          "number": "8.2",
+          "title": "Project Budget Status Update",
+          "instruction": "Provide an annual budget update by project per Federal Fiscal Year (FFY).",
+          "apduRequirement": "project expenditures report consisting of detailed accounting of all expenditures and explanation of differences between projected expenses in approved APD and actual expenditures",
+          "table": {
+            "id": "Table H",
+            "columns": [
+              "approved funding",
+              "expenditures to date",
+              "remaining funding"
+            ],
+            "dimensions": [
+              "FFY",
+              "federal share",
+              "state share"
+            ]
+          }
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(iii)",
+          "quote": "A specific budget for the planning phase of the project",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(a)(2)(iv)",
+          "quote": "An estimated total project cost and a prospective State and Federal cost allocation/distribution",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(b)(8)",
+          "quote": "Proposed budget accounting all possible Implementation APD activity costs",
+          "appliesTo": [
+            "IAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(c)(1)(v)",
+          "quote": "Revised budget for entirety of the project's life-cycle",
+          "appliesTo": [
+            "APDU_ANNUAL"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(c)(1)(vi)",
+          "quote": "Project expenditures report with detailed accounting of all expenditures and variance explanation",
+          "appliesTo": [
+            "APDU_ANNUAL"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.631(a)",
+          "quote": "Using its normal departmental accounting system, the State agency shall specifically identify what items of costs constitute development costs, assign these costs to specific project cost centers, and distribute these costs to funding sources based on the specific identification, assignment and distribution outlined in the approved APD"
+        },
+        {
+          "citation": "42 CFR 433.112(a)",
+          "quote": "FFP is available at the 90 percent rate in State expenditures for the design, development, installation, or enhancement of a mechanized claims processing and information retrieval system only if the APD is approved by CMS prior to the State's expenditure of funds for these purposes.",
+          "critical": true
+        },
+        {
+          "citation": "42 CFR 433.116(a)",
+          "quote": "FFP is available at 75 percent of expenditures for operation of a mechanized claims processing and information retrieval system approved by CMS, from the first day of the calendar quarter after the date the system met the conditions of initial approval, as established by CMS (including a retroactive adjustment of FFP if necessary to provide the 75 percent rate beginning on the first day of that calendar quarter)."
+        },
+        {
+          "citation": "42 CFR 433.112(b)(7)",
+          "quote": "The costs of the system are determined in accordance with 2 CFR parts 200 and 300, subpart E."
+        }
+      ],
+      "reviewerFocus": "Whether the narrative and the numbers agree. Budget/narrative discrepancy is the single most commonly cited reason CMS returns an APD. Also whether DDI is correctly separated from M&O — DDI earns 90 percent, M&O earns 75 percent, and misclassification is a disallowance risk.",
+      "validationRules": [
+        {
+          "id": "V-APD-S8-001",
+          "severity": "blocker",
+          "check": "NARRATIVE/BUDGET RECONCILIATION. Table D totals equal the sum of the MDBT project sheets, and every activity in Section 7 Table C has a corresponding budget line.",
+          "machineCheckable": true,
+          "basis": "DERIVED; the flagship Compliance Validator check",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S8-002",
+          "severity": "blocker",
+          "check": "MATCH RATE ARITHMETIC. For every budget line: 90% federal pairs only with 10% state; 75% federal only with 25% state; 50% federal only with 50% state. Each federal/state pair sums to the line total.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(a); 42 CFR 433.116(a); Table D column structure",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S8-003",
+          "severity": "blocker",
+          "check": "DDI/M&O SEPARATION. Every cost is classified as DDI or M&O. No cost classified as M&O is claimed at 90 percent. No DDI cost is claimed at 75 percent without an explicit rationale.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(a) vs 42 CFR 433.116(a); 45 CFR 95.631(a)-(b)",
+          "flagshipRule": true,
+          "conflictRefs": [
+            "CONFLICT-005"
+          ]
+        },
+        {
+          "id": "V-APD-S8-004",
+          "severity": "blocker",
+          "check": "PRE-EXPENDITURE APPROVAL. No expenditure period declared in this APD begins before the anticipated CMS approval date for costs claimed at the enhanced rate.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(a) — 'only if the APD is approved by CMS prior to the State's expenditure of funds'",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S8-005",
+          "severity": "error",
+          "check": "The period within which FFP will be claimed is explicitly stated.",
+          "machineCheckable": true,
+          "basis": "Template content requirement"
+        },
+        {
+          "id": "V-APD-S8-006",
+          "severity": "error",
+          "check": "An MDBT is attached to every APD requesting MMIS or E&E funding.",
+          "machineCheckable": true,
+          "basis": "Template Section 8.1 instruction"
+        },
+        {
+          "id": "V-APD-S8-007",
+          "severity": "error",
+          "check": "APDU — Table H reports approved funding, expenditures to date, and remaining funding by FFY with federal and state shares, and a written variance explanation accompanies any difference between projected and actual expenditures.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(c)(1)(vi)"
+        },
+        {
+          "id": "V-APD-S8-008",
+          "severity": "blocker",
+          "check": "CHANGE RADAR CROSS-CHECK. If the revised total project cost exceeds the last approved total by $300,000 or 10 percent of project cost, whichever is less, an As-Needed APDU obligation is raised with a filing deadline 60 days from the date the change occurred.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(c)(2)(ii)(A); RR-TRIG-ENH-COST",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S8-009",
+          "severity": "warning",
+          "check": "In-house versus contractor split is stated and reconciles to Tables A and B.",
+          "machineCheckable": true,
+          "basis": "DERIVED"
+        }
+      ],
+      "whatChanged": "The sample MDBT moved here from the old template's Appendix A.",
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S9",
+      "documentType": "MES_APD",
+      "number": "9",
+      "title": "Statement of Duration",
+      "isNewInCurrentTemplate": true,
+      "requiredBy": {
+        "PAPD": "check template",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "should indicate the duration the state expects to use the equipment and/or systems once implemented",
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(b)(9)",
+          "quote": "A statement indicating the duration the State expects to use the equipment"
+        },
+        {
+          "citation": "45 CFR 95.619",
+          "quote": "ADP systems designed, developed, or installed with FFP shall be used for a period of time specified in the advance planning document, unless the Department determines that a shorter period is justified."
+        },
+        {
+          "citation": "42 CFR 433.112(b)(8)",
+          "quote": "The Medicaid agency agrees in writing to use the system for the period of time specified in the advance planning document approved by CMS or for any shorter period of time that CMS determines justifies the Federal funds invested."
+        }
+      ],
+      "reviewerFocus": "A short stated duration against a large DDI request invites the question of whether federal funds are justified. This section is also the binding commitment behind CEF 8.",
+      "validationRules": [
+        {
+          "id": "V-APD-S9-001",
+          "severity": "blocker",
+          "check": "An explicit duration is stated as a number of years or an end date. 'Indefinite', 'ongoing', or a blank fails.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.610(b)(9); 45 CFR 95.619"
+        },
+        {
+          "id": "V-APD-S9-002",
+          "severity": "error",
+          "check": "The stated duration is consistent with the Appendix C attestation to 42 CFR 433.112(b)(8).",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        },
+        {
+          "id": "V-APD-S9-003",
+          "severity": "warning",
+          "check": "The stated duration is not shorter than the contract term including option years stated in Section 5.",
+          "machineCheckable": true,
+          "basis": "DERIVED"
+        }
+      ],
+      "whatChanged": "Entirely new section in the current template.",
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S10",
+      "documentType": "MES_APD",
+      "number": "10",
+      "title": "Cost Allocation Plan for Implementation Activities",
+      "requiredBy": {
+        "PAPD": "conditional",
+        "IAPD": "conditional",
+        "APDU_ANNUAL": "conditional",
+        "APDU_AS_NEEDED": "conditional"
+      },
+      "condition": "Complete if there are other programs benefiting from the project/system.",
+      "templateInstruction": "Cost allocation plan per 45 CFR § 95.507 and OMB Circular A-87",
+      "citationNote": "The template cites 45 CFR 95.507 (Subpart E — cost allocation plans) and OMB Circular A-87. Note that OMB Circular A-87 has been superseded by 2 CFR Part 200; 42 CFR 433.112(b)(7) and 45 CFR 95.613(a) both point to 2 CFR parts 200 and 300. Flagged as CONFLICT-003 — verify which citation CMS expects before asserting either to a customer.",
+      "typeSpecificContent": {
+        "PAPD": "estimated total project cost and prospective state and federal cost allocation/distribution",
+        "other": "prospective allocation estimate or report of approved or anticipated changes to allocation basis"
+      },
+      "table": {
+        "id": "Table I",
+        "columns": [
+          "federal/state program",
+          "Medicaid share",
+          "federal share",
+          "state share",
+          "other benefitting program share",
+          "total program cost"
+        ]
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(a)(2)(iv)",
+          "appliesTo": [
+            "PAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(b)(10)",
+          "quote": "Cost allocation estimate and proposed procedures for distributing costs",
+          "appliesTo": [
+            "IAPD"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.610(c)(1)(vii)",
+          "quote": "Report of approved or anticipated changes to allocation basis in the APD's approved cost allocation methodology",
+          "appliesTo": [
+            "APDU_ANNUAL"
+          ]
+        },
+        {
+          "citation": "45 CFR 95.631(a)(2)",
+          "quote": "The State agency shall amend the cost allocation plan required by subpart E of this part to include the approved APD methodology for the identification, assignment and distribution of the development costs.",
+          "critical": true
+        },
+        {
+          "citation": "45 CFR 95.631(b)",
+          "quote": "Costs incurred for the operation of an ADP system shall be identified and assigned by the State agency to funding sources in accordance with the approved cost allocation plan required by Subpart E of this part."
+        }
+      ],
+      "reviewerFocus": "Whether the allocation ties out arithmetically and whether Medicaid is being asked to carry costs that benefit other programs. Cost allocation that does not tie out is a known return reason and a later audit finding.",
+      "linkedRules": [
+        "RR-TRIG-ENH-COSTALLOC",
+        "RR-CAP-AMEND"
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-S10-001",
+          "severity": "blocker",
+          "check": "COST ALLOCATION TIE-OUT. For every Table I row, Medicaid share plus other benefitting program shares equals 100 percent of total program cost, and federal plus state share equals the Medicaid share.",
+          "machineCheckable": true,
+          "basis": "DERIVED; arithmetic integrity",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-S10-002",
+          "severity": "blocker",
+          "check": "If any program other than Medicaid is identified as benefitting, Section 10 is completed. Multi-program benefit with a blank Section 10 fails.",
+          "machineCheckable": true,
+          "basis": "Template condition"
+        },
+        {
+          "id": "V-APD-S10-003",
+          "severity": "error",
+          "check": "The allocation methodology narrative here is identical in substance to the one in Section 6.2.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        },
+        {
+          "id": "V-APD-S10-004",
+          "severity": "error",
+          "check": "Section 10 totals reconcile to the Section 8 budget and the MDBT.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation"
+        },
+        {
+          "id": "V-APD-S10-005",
+          "severity": "error",
+          "check": "A Subpart E cost allocation plan amendment is on record or in progress reflecting the APD's development-cost methodology.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.631(a)(2)"
+        },
+        {
+          "id": "V-APD-S10-006",
+          "severity": "blocker",
+          "check": "CHANGE RADAR CROSS-CHECK. Any change to the approved cost allocation methodology raises an As-Needed APDU obligation with a 60-day filing deadline.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(c)(2)(ii)(E); RR-TRIG-ENH-COSTALLOC"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S11",
+      "documentType": "MES_APD",
+      "number": "11",
+      "title": "Security and Interface Requirements",
+      "requiredBy": {
+        "PAPD": "not applicable",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "papdInstruction": "Not required. Indicate that 'This section is not applicable for PAPD.'",
+      "contentRequirements": [
+        {
+          "id": "APD-S11-R1",
+          "text": "Attestation that the state has implemented and will maintain a comprehensive System Security and Privacy Plan"
+        },
+        {
+          "id": "APD-S11-R2",
+          "text": "Identification of which standards will be followed (i.e., NIST or ACA Administering Entity [AE])"
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(b)(11)",
+          "quote": "A statement setting forth the security and interface requirements and disaster recovery procedures"
+        },
+        {
+          "citation": "42 CFR 433.112(b)(9)",
+          "quote": "The agency agrees in writing that the information in the system will be safeguarded in accordance with subpart F, part 431 of this subchapter."
+        },
+        {
+          "citation": "45 CFR 95.621(f)",
+          "quote": "Biennial ADP system security review requirement and designation of an ADP Security Manager",
+          "paraphraseWarning": "Summary of the retrieved 95.621 state-agency responsibilities; re-verify verbatim before customer use."
+        }
+      ],
+      "reviewerFocus": "Whether a named standards framework is committed to, not merely 'security is important'. Note the current template deliberately removed explicit disaster recovery and business continuity language from this section.",
+      "whatChanged": "Removed explicit disaster recovery and business continuity references because 'those are addressed by CEF 18 in Appendix C.'",
+      "validationRules": [
+        {
+          "id": "V-APD-S11-001",
+          "severity": "blocker",
+          "check": "Non-PAPD — the System Security and Privacy Plan attestation is present.",
+          "machineCheckable": true,
+          "basis": "Template content requirement"
+        },
+        {
+          "id": "V-APD-S11-002",
+          "severity": "blocker",
+          "check": "Non-PAPD — a specific standards framework is named (NIST or ACA Administering Entity). A generic security statement without a named framework fails.",
+          "machineCheckable": true,
+          "basis": "Template content requirement"
+        },
+        {
+          "id": "V-APD-S11-003",
+          "severity": "error",
+          "check": "PAPD — this section contains the required not-applicable statement rather than being blank or filled in.",
+          "machineCheckable": true,
+          "basis": "Template PAPD instruction"
+        },
+        {
+          "id": "V-APD-S11-004",
+          "severity": "error",
+          "check": "Disaster/failure mitigation is addressed in Appendix C at CEF 18 rather than here, consistent with the current template design.",
+          "machineCheckable": true,
+          "basis": "'What Changed' crosswalk; 42 CFR 433.112(b)(18)"
+        },
+        {
+          "id": "V-APD-S11-005",
+          "severity": "warning",
+          "check": "Interface requirements identify the systems interfaced with, and are consistent with the Appendix A diagram.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-S12",
+      "documentType": "MES_APD",
+      "number": "12",
+      "title": "Assurances and Compliance",
+      "requiredBy": {
+        "PAPD": "required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Use Table J to indicate whether the state will comply with specified Code of Federal Regulations (CFR) citations, by checking 'Yes' or 'No' for each line item. If state selects 'No' for any item, please provide explanation.",
+      "table": {
+        "id": "Table J",
+        "name": "Assurances and Compliance",
+        "citationsCovered": [
+          "42 CFR Part 433",
+          "45 CFR Part 75",
+          "45 CFR Part 95",
+          "42 CFR § 431.17",
+          "45 CFR § 95.615",
+          "45 CFR § 95.617",
+          "42 CFR § 431.300",
+          "45 CFR Part 164"
+        ]
+      },
+      "citationDetail": [
+        {
+          "citation": "45 CFR 95.615",
+          "title": "Access to systems and records",
+          "quote": "The State agency must allow the Department access to the system in all of its aspects, including pertinent state staff, design developments, operation, and cost records of contractors and subcontractors at such intervals as are deemed necessary by the Department to determine whether the conditions for approval are being met and to determine the efficiency, economy and effectiveness of the system."
+        },
+        {
+          "citation": "45 CFR 95.617",
+          "title": "Software and ownership rights"
+        },
+        {
+          "citation": "42 CFR 431.17",
+          "title": "Maintenance of records"
+        },
+        {
+          "citation": "42 CFR 431.300",
+          "title": "Safeguarding information — basis and purpose"
+        },
+        {
+          "citation": "45 CFR Part 164",
+          "title": "HIPAA Security and Privacy Rules"
+        },
+        {
+          "citation": "45 CFR Part 75",
+          "title": "HHS Uniform Administrative Requirements, Cost Principles, and Audit Requirements"
+        }
+      ],
+      "whatChanged": "Updated to reflect current regulatory citations.",
+      "reviewerFocus": "Any 'No' without an explanation is an immediate return. A 'Yes' the state cannot support is worse — it is an attestation.",
+      "guardrail": "APD Studio drafts and validates this table. It never marks an attestation on the state's behalf. A named state official checks each box.",
+      "validationRules": [
+        {
+          "id": "V-APD-S12-001",
+          "severity": "blocker",
+          "check": "Every Table J line item has a Yes or No selection. Blank rows fail.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-S12-002",
+          "severity": "blocker",
+          "check": "Every 'No' selection carries a written explanation.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-S12-003",
+          "severity": "blocker",
+          "check": "HUMAN ATTESTATION GATE. The document cannot be marked submission-ready unless a named human approver has affirmatively set each Table J value. System-defaulted values fail.",
+          "machineCheckable": true,
+          "basis": "Product guardrail: no attestation on a state's behalf",
+          "flagshipRule": true
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-APX-A",
+      "documentType": "MES_APD",
+      "number": "Appendix A",
+      "title": "Diagram",
+      "isNewInCurrentTemplate": true,
+      "requiredBy": {
+        "PAPD": "check template",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Present a diagram of the system to be supported by CMS, showing connection to other MES systems and, if applicable, other benefiting programs.",
+      "regulatoryBasis": [
+        {
+          "citation": "42 CFR 433.112(b)(10)",
+          "quote": "Use a modular, flexible approach to systems development, including the use of open interfaces and exposed application programming interfaces; the separation of business rules from core programming, available in both human and machine readable formats.",
+          "mapping": "DERIVED — the diagram is how modularity and interfaces are evidenced visually."
+        },
+        {
+          "citation": "42 CFR 433.112(b)(16)",
+          "quote": "The system supports seamless coordination and integration with the Marketplace, the Federal Data Services Hub, and allows interoperability with health information exchanges, public health agencies, human services programs, and community organizations providing outreach and enrollment assistance services as applicable."
+        }
+      ],
+      "reviewerFocus": "Whether the diagram shows the module's boundaries and its interfaces, and whether the other benefitting programs shown match the cost allocation in Section 10.",
+      "validationRules": [
+        {
+          "id": "V-APD-APXA-001",
+          "severity": "error",
+          "check": "A diagram image or embedded object is present.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXA-002",
+          "severity": "error",
+          "check": "Every other benefitting program shown in the diagram appears in the Section 10 cost allocation table, and vice versa.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency",
+          "flagshipRule": true
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-APX-B",
+      "documentType": "MES_APD",
+      "number": "Appendix B",
+      "title": "Other Information Required",
+      "requiredBy": {
+        "PAPD": "conditional",
+        "IAPD": "required (carries the AoA)",
+        "APDU_ANNUAL": "conditional",
+        "APDU_AS_NEEDED": "conditional"
+      },
+      "templateInstruction": "Contain other information needed, such as the Analysis of Alternatives, for CMS to make clear determination on whether project is eligible for MES funding.",
+      "carriesArtifact": "AOA_TEMPLATE",
+      "conflictRefs": [
+        "CONFLICT-001"
+      ],
+      "reviewerFocus": "Presence and quality of the completed AoA.",
+      "validationRules": [
+        {
+          "id": "V-APD-APXB-001",
+          "severity": "blocker",
+          "check": "IAPD — a completed AoA conforming to the AoA template schema is attached here.",
+          "machineCheckable": true,
+          "basis": "SHO #25-003 FAQ",
+          "conflictRefs": [
+            "CONFLICT-001"
+          ]
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-APX-C",
+      "documentType": "MES_APD",
+      "number": "Appendix C",
+      "title": "Conditions for Enhanced Funding",
+      "requiredBy": {
+        "PAPD": "not required",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "papdInstruction": "Not required.",
+      "templateInstruction": "Required as referenced in 42 CFR § 433.112(b). Attest 'Yes,' 'No,' or 'N/A'; if Yes, explain how the condition is met; if No or N/A, explain. Include separate table for each project.",
+      "table": {
+        "id": "Table K",
+        "name": "CEF Confirmation Table",
+        "conditionCount": 22,
+        "note": "The retrieved PRA conversion rendered the instruction as 'completing Table J' while labeling the grid 'Table K'. One is an extraction artifact. Confirm the actual table letter against the Word original before hard-coding. Recorded as CONFLICT-002."
+      },
+      "conflictRefs": [
+        "CONFLICT-002"
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "42 CFR 433.112(b)(1)-(22)",
+          "conditionCount": 22,
+          "provenance": "RETRIEVED verbatim"
+        }
+      ],
+      "whatChanged": "Replaced the old acquisition checklist with Enhanced Funding attestation requirements.",
+      "reviewerFocus": "This is the heart of the enhanced-match case. A State Officer reads the explanations, not the checkboxes.",
+      "guardrail": "APD Studio drafts explanation text and assembles evidence. A named state official makes each attestation.",
+      "conditions": [
+        {
+          "ref": "b1",
+          "citation": "42 CFR 433.112(b)(1)",
+          "text": "CMS determines the system is likely to provide more efficient, economical, and effective administration of the State plan.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b2",
+          "citation": "42 CFR 433.112(b)(2)",
+          "text": "The system meets the system requirements, standards and conditions, and performance standards in Part 11 of the State Medicaid Manual, as periodically amended.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": false
+        },
+        {
+          "ref": "b3",
+          "citation": "42 CFR 433.112(b)(3)",
+          "text": "The system is compatible with the claims processing and information retrieval systems used in the administration of Medicare for prompt eligibility verification and for processing claims for persons eligible for both programs.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b4",
+          "citation": "42 CFR 433.112(b)(4)",
+          "text": "The system supports the data requirements of quality improvement organizations established under Part B of title XI of the Act.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b5",
+          "citation": "42 CFR 433.112(b)(5)",
+          "text": "The State owns any software that is designed, developed, installed or improved with 90 percent FFP.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": false,
+          "linkedRules": [
+            "RR-SW-OWNERSHIP"
+          ]
+        },
+        {
+          "ref": "b6",
+          "citation": "42 CFR 433.112(b)(6)",
+          "text": "The Department has a royalty free, non-exclusive, and irrevocable license to reproduce, publish, or otherwise use and authorize others to use, for Federal Government purposes, software, modifications to software, and documentation that is designed, developed, installed or enhanced with 90 percent FFP.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": false,
+          "linkedRules": [
+            "RR-SW-FEDLICENSE"
+          ]
+        },
+        {
+          "ref": "b7",
+          "citation": "42 CFR 433.112(b)(7)",
+          "text": "The costs of the system are determined in accordance with 2 CFR parts 200 and 300, subpart E.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b8",
+          "citation": "42 CFR 433.112(b)(8)",
+          "text": "The Medicaid agency agrees in writing to use the system for the period of time specified in the advance planning document approved by CMS or for any shorter period of time that CMS determines justifies the Federal funds invested.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "linkedSection": "APD-S9"
+        },
+        {
+          "ref": "b9",
+          "citation": "42 CFR 433.112(b)(9)",
+          "text": "The agency agrees in writing that the information in the system will be safeguarded in accordance with subpart F, part 431 of this subchapter.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "linkedSection": "APD-S11"
+        },
+        {
+          "ref": "b10",
+          "citation": "42 CFR 433.112(b)(10)",
+          "text": "Use a modular, flexible approach to systems development, including the use of open interfaces and exposed application programming interfaces; the separation of business rules from core programming, available in both human and machine readable formats.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true
+        },
+        {
+          "ref": "b11",
+          "citation": "42 CFR 433.112(b)(11)",
+          "text": "Align to, and advance increasingly, in MITA maturity for business, architecture, and data.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true,
+          "note": "Names no specific maturity level and no required rate of advancement. There is no numeric threshold to validate against. See CONFLICT-006 on the MITA State Self-Assessment."
+        },
+        {
+          "ref": "b12",
+          "citation": "42 CFR 433.112(b)(12)",
+          "text": "The agency ensures alignment with, and incorporation of, standards and implementation specifications for health information technology adopted by the Office of the National Coordinator for Health IT in 45 CFR part 170, subpart B. The agency also ensures alignment with: the HIPAA privacy, security, breach notification and enforcement regulations in 45 CFR parts 160 and 164; and the transaction standards and operating rules adopted by the Secretary under HIPAA and/or section 1104 of the Affordable Care Act. The agency meets accessibility standards established under section 508 of the Rehabilitation Act, or standards that provide greater accessibility for individuals with disabilities, and compliance with Federal civil rights laws; standards and protocols adopted by the Secretary under section 1561 of the Affordable Care Act; standards and protocols for reporting on the Child and Adult Core Sets as adopted by the Secretary under sections 1139A, 1139B, and 1902(a)(6) of the Act, and 42 CFR part 437 subpart A; and standards and protocols for reporting on the Health Home Core Sets as adopted by the Secretary under sections 1902(a)(6), 1945(c)(4)(B) and (g), and 1945A(g) of the Act and 42 CFR part 437 subpart A.",
+          "textTruncatedInRetrieval": true,
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true
+        },
+        {
+          "ref": "b13",
+          "citation": "42 CFR 433.112(b)(13)",
+          "text": "Promote sharing, leverage, and reuse of Medicaid technologies and systems within and among States.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true,
+          "linkedSection": "APD-S3"
+        },
+        {
+          "ref": "b14",
+          "citation": "42 CFR 433.112(b)(14)",
+          "text": "Support accurate and timely processing and adjudications/eligibility determinations and effective communications with providers, beneficiaries, and the public.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true
+        },
+        {
+          "ref": "b15",
+          "citation": "42 CFR 433.112(b)(15)",
+          "text": "Produce transaction data, reports, and performance information that would contribute to program evaluation, continuous improvement in business operations, and transparency and accountability.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true,
+          "linkedSection": "APD-APX-D",
+          "note": "This is the regulatory root of the Operational Report Workbook obligation."
+        },
+        {
+          "ref": "b16",
+          "citation": "42 CFR 433.112(b)(16)",
+          "text": "The system supports seamless coordination and integration with the Marketplace, the Federal Data Services Hub, and allows interoperability with health information exchanges, public health agencies, human services programs, and community organizations providing outreach and enrollment assistance services as applicable.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesAtOperations": true
+        },
+        {
+          "ref": "b17",
+          "citation": "42 CFR 433.112(b)(17)",
+          "text": "For E&E systems, the State must have delivered acceptable MAGI-based system functionality, demonstrated by performance testing and results based on critical success factors, with limited mitigations and workarounds.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "appliesTo": [
+            "E&E"
+          ]
+        },
+        {
+          "ref": "b18",
+          "citation": "42 CFR 433.112(b)(18)",
+          "text": "The State must submit plans that contain strategies for reducing the operational consequences of failure to meet applicable requirements for all major milestones and functionality.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "note": "This is where disaster/failure mitigation now lives, having been removed from Section 11."
+        },
+        {
+          "ref": "b19",
+          "citation": "42 CFR 433.112(b)(19)",
+          "text": "The agency, in writing through the APD, must identify key state personnel by name, type and time commitment assigned to each project.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "linkedSection": "APD-S6",
+          "onFaceCheckable": true
+        },
+        {
+          "ref": "b20",
+          "citation": "42 CFR 433.112(b)(20)",
+          "text": "Systems and modules developed, installed or improved with 90 percent match must include documentation of components and procedures such that the systems could be operated by a variety of contractors or other users.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b21",
+          "citation": "42 CFR 433.112(b)(21)",
+          "text": "For software systems and modules developed, installed or improved with 90 percent match, the State must consider strategies to minimize the costs and difficulty of operating the software on alternate hardware or operating systems.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true
+        },
+        {
+          "ref": "b22",
+          "citation": "42 CFR 433.112(b)(22)",
+          "text": "Other conditions for compliance with existing statutory and regulatory requirements, issued through formal guidance procedures, determined by the Secretary to be necessary to update and ensure proper implementation of those existing requirements.",
+          "appliesAtInitialApproval": true,
+          "appliesAtReapproval": true,
+          "note": "Open-ended. This is the hook through which new CMS guidance becomes a funding condition — the reason the Knowledge Core must track SHOs, SMDLs and CIBs, not just the CFR."
+        }
+      ],
+      "reapprovalSubset": {
+        "citation": "42 CFR 433.119(a)(1)",
+        "quote": "The system meets the requirements of § 433.112(b)(1), (3), (4), and (7) through (22).",
+        "appliesOnReapproval": [
+          "b1",
+          "b3",
+          "b4",
+          "b7",
+          "b8",
+          "b9",
+          "b10",
+          "b11",
+          "b12",
+          "b13",
+          "b14",
+          "b15",
+          "b16",
+          "b17",
+          "b18",
+          "b19",
+          "b20",
+          "b21",
+          "b22"
+        ],
+        "excludedOnReapproval": [
+          "b2",
+          "b5",
+          "b6"
+        ],
+        "productNote": "The reapproval checklist is a strict subset of the initial-approval checklist. Conditions (b)(2), (b)(5), and (b)(6) do not apply at reapproval. Getting this subset right is a differentiator — most generic tools will not."
+      },
+      "validationRules": [
+        {
+          "id": "V-APD-APXC-001",
+          "severity": "blocker",
+          "check": "Non-PAPD — all 22 CEF rows are present and each carries Yes, No, or N/A.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(1)-(22); template instruction"
+        },
+        {
+          "id": "V-APD-APXC-002",
+          "severity": "blocker",
+          "check": "Every 'Yes' carries an explanation of how the condition is met; every 'No' or 'N/A' carries an explanation of why.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXC-003",
+          "severity": "blocker",
+          "check": "A separate CEF table exists for each project in a multi-project APD.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXC-004",
+          "severity": "blocker",
+          "check": "CEF 19 CROSS-CHECK. The b19 attestation is 'Yes' only if Section 6 Table A actually names individuals with time commitments (V-APD-S6-001 passes). A 'Yes' with an unnamed personnel table is a false attestation.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(19)",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-APXC-005",
+          "severity": "blocker",
+          "check": "CEF 8 CROSS-CHECK. The b8 attestation is consistent with the duration stated in Section 9.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(8)"
+        },
+        {
+          "id": "V-APD-APXC-006",
+          "severity": "blocker",
+          "check": "CEF 5/6 GATE. If any cost is claimed at 90 percent FFP, the b5 and b6 attestations are 'Yes' and the Section 5 acquisition summary contains the corresponding software-ownership and federal-license clauses.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(5)-(6); 45 CFR 95.617",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-APXC-007",
+          "severity": "blocker",
+          "check": "CEF 17 GATE. For E&E projects, the b17 attestation is supported by referenced performance testing results, not a bare assertion.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(17)"
+        },
+        {
+          "id": "V-APD-APXC-008",
+          "severity": "error",
+          "check": "b13 reuse attestation is consistent with the reuse analysis in Section 3 and the AoA (V-APD-S3-003).",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(13)"
+        },
+        {
+          "id": "V-APD-APXC-009",
+          "severity": "blocker",
+          "check": "HUMAN ATTESTATION GATE. No CEF value may be set by the system. A named state official sets each one.",
+          "machineCheckable": true,
+          "basis": "Product guardrail",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-APXC-010",
+          "severity": "info",
+          "check": "REAPPROVAL MODE. When evaluating a system for reapproval rather than initial approval, evaluate only b1, b3, b4, and b7 through b22.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.119(a)(1)"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-APX-D",
+      "documentType": "MES_APD",
+      "number": "Appendix D",
+      "title": "Outcomes and Metrics",
+      "isNewInCurrentTemplate": true,
+      "requiredBy": {
+        "PAPD": "check template",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Using Table L, list all CMS-required outcome reference numbers, indicating applicability and new/modified metrics, referencing the MES Certification Repository.",
+      "tables": [
+        {
+          "id": "Table L",
+          "name": "CMS-Required Outcomes",
+          "columns": [
+            "reference number",
+            "applicability Yes/No with explanation",
+            "new/modified metric"
+          ]
+        },
+        {
+          "id": "Table M",
+          "name": "State-Specific Outcomes",
+          "columns": [
+            "business goal",
+            "state-specific outcome reference",
+            "the outcome",
+            "new/modified metric with explanation"
+          ],
+          "referenceFormat": "ST[ModuleAbbreviation][ConsecutiveNumber]"
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "42 CFR 433.112(b)(15)",
+          "quote": "Produce transaction data, reports, and performance information that would contribute to program evaluation, continuous improvement in business operations, and transparency and accountability."
+        },
+        {
+          "citation": "SMDL #22-001",
+          "quote": "Outcomes describe the measurable improvements to a state's Medicaid program that should result from the delivery of a new module or enhancement to an existing module."
+        },
+        {
+          "citation": "SMDL #22-001",
+          "quote": "Metrics provide evidence about whether the intended outcomes are achieved through the delivery of a new module or enhancement."
+        }
+      ],
+      "externalReference": "MES Certification Repository — https://cmsgov.github.io/CMCS-DSG-DSS-Certification/",
+      "reviewerFocus": "Whether every CMS-required outcome for the module is addressed, and whether the metrics are actually measurable from the system being built.",
+      "downstreamObligation": "Outcomes and metrics declared here become the state's monthly Operational Report Workbook obligation. This appendix is where the Ongoing Obligations Engine gets its configuration.",
+      "validationRules": [
+        {
+          "id": "V-APD-APXD-001",
+          "severity": "blocker",
+          "check": "Every CMS-required outcome reference number for the declared module(s) appears in Table L with an applicability determination.",
+          "machineCheckable": true,
+          "basis": "Template instruction; MES Certification Repository module lists"
+        },
+        {
+          "id": "V-APD-APXD-002",
+          "severity": "blocker",
+          "check": "Every 'No' applicability determination carries an explanation.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXD-003",
+          "severity": "error",
+          "check": "Every state-specific outcome reference in Table M matches the format ST[ModuleAbbreviation][ConsecutiveNumber].",
+          "machineCheckable": true,
+          "basis": "Template reference format"
+        },
+        {
+          "id": "V-APD-APXD-004",
+          "severity": "error",
+          "check": "Every declared metric is instantiable in the ORW — it has a Value Type in {Percentage/Ratio, Numerical, List}, and if Percentage/Ratio, a numerator and denominator definition.",
+          "machineCheckable": true,
+          "basis": "Operational Report Workbook Metric Definitions tab"
+        },
+        {
+          "id": "V-APD-APXD-005",
+          "severity": "error",
+          "check": "Metric IDs follow [StateAbbreviation]-CR-[ModuleAbbreviation]-[OutcomeNumber].[ConsecutiveNumber] for CMS-required outcomes and -ST- for state-specific, and no Metric ID is reused.",
+          "machineCheckable": true,
+          "basis": "ORW rules: 'Do not reuse Metric IDs.'"
+        },
+        {
+          "id": "V-APD-APXD-006",
+          "severity": "warning",
+          "check": "Declared outcomes trace to the success measures stated in Section 2.2.",
+          "machineCheckable": true,
+          "basis": "DERIVED; cross-section consistency"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "APD-APX-E",
+      "documentType": "MES_APD",
+      "number": "Appendix E",
+      "title": "Certification",
+      "isNewInCurrentTemplate": true,
+      "requiredBy": {
+        "PAPD": "check template",
+        "IAPD": "required",
+        "APDU_ANNUAL": "required",
+        "APDU_AS_NEEDED": "required"
+      },
+      "templateInstruction": "Complete Table N by answering each question with 'Yes' or 'No'. Include separate table for each project.",
+      "table": {
+        "id": "Table N",
+        "questions": [
+          "module/service status",
+          "initial implementation vs. replacement",
+          "existing system CMS certification status and date",
+          "direct SMA operation vs. third-party provision",
+          "additional certification need with high-level timeline"
+        ]
+      },
+      "importantNote": {
+        "quote": "if a module may not need certification, the state may still qualify to receive enhanced funding and be required to provide data through operational reporting as per 42 CFR § 433.112(b)(15)",
+        "productImplication": "No-certification does not mean no-reporting. The Ongoing Obligations Engine must still generate ORW submissions for uncertified modules receiving enhanced funding."
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "42 CFR 433.112(b)(15)"
+        },
+        {
+          "citation": "42 CFR 433.117",
+          "note": "Replacement system provisions",
+          "appliesTo": [
+            "replacement projects"
+          ]
+        }
+      ],
+      "validationRules": [
+        {
+          "id": "V-APD-APXE-001",
+          "severity": "blocker",
+          "check": "Every Table N question has a Yes or No answer, with a separate table per project.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXE-002",
+          "severity": "blocker",
+          "check": "REPLACEMENT CROSS-CHECK. If Table N indicates a replacement rather than an initial implementation, Section 2.2 contains the operational date and orderly transition plan required by 42 CFR 433.117(b).",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.117(b)(1)-(2)",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-APD-APXE-003",
+          "severity": "error",
+          "check": "If additional certification is needed, a high-level timeline is provided and is consistent with the Section 7 activity schedule.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-APD-APXE-004",
+          "severity": "error",
+          "check": "REPORTING OBLIGATION. If the module receives enhanced funding, an ORW obligation is created regardless of the certification answer.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.112(b)(15); template note"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-ES",
+      "documentType": "MES_OAPD",
+      "number": "Executive Summary",
+      "title": "Executive Summary",
+      "required": true,
+      "templateInstruction": "a brief executive summary (one or two paragraphs) outlining this OAPD's intent",
+      "validationRules": [
+        {
+          "id": "V-OAPD-ES-001",
+          "severity": "warning",
+          "check": "Executive summary present and within one to two paragraphs.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-S1",
+      "documentType": "MES_OAPD",
+      "number": "1",
+      "title": "Summary of Activities",
+      "required": true,
+      "templateInstruction": "a detailed description of the nature and scope of the activities to be undertaken and the methods to be used",
+      "table": {
+        "id": "Table A",
+        "name": "Activities Table"
+      },
+      "subsections": [
+        {
+          "id": "OAPD-S1.1",
+          "number": "1.1",
+          "title": "Activity 1 – [Activity Name]",
+          "repeating": true
+        },
+        {
+          "id": "OAPD-S1.2",
+          "number": "1.2",
+          "title": "Activity 2 – [Activity Name]",
+          "repeating": true
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(c)(3)",
+          "quote": "Summary of activities"
+        }
+      ],
+      "validationRules": [
+        {
+          "id": "V-OAPD-S1-001",
+          "severity": "error",
+          "check": "Each activity in Table A has its own narrative subsection with a status summary.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-S2",
+      "documentType": "MES_OAPD",
+      "number": "2",
+      "title": "Acquisitions",
+      "required": true,
+      "templateInstruction": "an acquisition summary for the upcoming year",
+      "contentRequirements": [
+        "contract types",
+        "scopes",
+        "estimated costs",
+        "contract terms",
+        "a statement or certification that the proposed acquisition will comply with all state and federal requirements"
+      ],
+      "table": {
+        "id": "Table B",
+        "name": "Sample Vendor Resource Table"
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(c)(3)",
+          "quote": "Acquisitions"
+        },
+        {
+          "citation": "45 CFR 95.611(b)(2)(iii)",
+          "threshold": 500000
+        }
+      ],
+      "validationRules": [
+        {
+          "id": "V-OAPD-S2-001",
+          "severity": "blocker",
+          "check": "PRIOR APPROVAL GATE. Every listed acquisition over $500,000 has a prior-approval submission on record.",
+          "machineCheckable": true,
+          "basis": "45 CFR 95.611(b)(2)(iii)"
+        },
+        {
+          "id": "V-OAPD-S2-002",
+          "severity": "blocker",
+          "check": "The federal/state compliance certification statement is present.",
+          "machineCheckable": true,
+          "basis": "Template content requirement"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-S3",
+      "documentType": "MES_OAPD",
+      "number": "3",
+      "title": "Annual Budget",
+      "required": true,
+      "templateInstruction": "the status of the project expenditures approved by CMS in the OAPD per FFY",
+      "subsections": [
+        {
+          "id": "OAPD-S3.1",
+          "number": "3.1",
+          "title": "Proposed Budget",
+          "instruction": "Include the proposed budget or revised funding requested in this OAPD, with attestation that costs comply with federal regulations; typically a two-year budget"
+        }
+      ],
+      "tables": [
+        {
+          "id": "Table C",
+          "name": "Sample OAPD Budget Status Update / Sample State Proposed Budget",
+          "note": "The retrieved conversion shows Table C used for two different captions. Verify against the Word original."
+        },
+        {
+          "id": "Table D",
+          "name": "Sample Contract Proposed Budget"
+        }
+      ],
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.610(c)(3)",
+          "quote": "Annual budget by project/system"
+        },
+        {
+          "citation": "42 CFR 433.116(a)",
+          "quote": "FFP is available at 75 percent of expenditures for operation of a mechanized claims processing and information retrieval system approved by CMS, from the first day of the calendar quarter after the date the system met the conditions of initial approval, as established by CMS (including a retroactive adjustment of FFP if necessary to provide the 75 percent rate beginning on the first day of that calendar quarter)."
+        }
+      ],
+      "validationRules": [
+        {
+          "id": "V-OAPD-S3-001",
+          "severity": "blocker",
+          "check": "Operations costs are claimed at 75 percent federal / 25 percent state, not 90/10.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.116(a)",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-OAPD-S3-002",
+          "severity": "blocker",
+          "check": "An MDBT accompanies the OAPD and its totals reconcile to the Section 3 tables.",
+          "machineCheckable": true,
+          "basis": "DERIVED; narrative/budget reconciliation"
+        },
+        {
+          "id": "V-OAPD-S3-003",
+          "severity": "error",
+          "check": "The federal-regulation compliance attestation for costs is present.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-APX-A",
+      "documentType": "MES_OAPD",
+      "number": "Appendix A",
+      "title": "Proposed Activity Schedule for the Project",
+      "required": true,
+      "templateInstruction": "a description of the nature and scope of system work and the methods used to execute the work; major milestones and key dates",
+      "table": {
+        "id": "Table E",
+        "name": "Sample Proposed Activity Schedule"
+      },
+      "conflictRefs": [
+        "CONFLICT-001"
+      ],
+      "criticalNote": "SHO #25-003 states the AoA template is used to complete 'Appendix A of the new MES OAPD.' The retrieved OAPD template's Appendix A is the Proposed Activity Schedule, and no AoA reference appears anywhere in OAPD Appendices A through D. Do not build the AoA Builder to write into OAPD Appendix A without resolving CONFLICT-001.",
+      "validationRules": [
+        {
+          "id": "V-OAPD-APXA-001",
+          "severity": "error",
+          "check": "Major milestones with key dates are present.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-APX-B",
+      "documentType": "MES_OAPD",
+      "number": "Appendix B",
+      "title": "Cost Allocation for Planned Maintenance & Operations Activities",
+      "required": "conditional",
+      "templateInstruction": "cost allocation plan identifying participants and cost distributions per OMB guidelines",
+      "table": {
+        "id": "Table F",
+        "name": "Sample Cost Allocation Summary Table"
+      },
+      "regulatoryBasis": [
+        {
+          "citation": "45 CFR 95.631(b)",
+          "quote": "Costs incurred for the operation of an ADP system shall be identified and assigned by the State agency to funding sources in accordance with the approved cost allocation plan required by Subpart E of this part."
+        }
+      ],
+      "validationRules": [
+        {
+          "id": "V-OAPD-APXB-001",
+          "severity": "blocker",
+          "check": "COST ALLOCATION TIE-OUT. Shares sum to 100 percent of total program cost and reconcile to Section 3.",
+          "machineCheckable": true,
+          "basis": "DERIVED; arithmetic integrity"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-APX-C",
+      "documentType": "MES_OAPD",
+      "number": "Appendix C",
+      "title": "Conditions for Enhanced Funding",
+      "required": true,
+      "templateInstruction": "attestation against 42 CFR § 433.112(b); responses 'Yes,' 'No,' or 'N/A' with explanations",
+      "table": {
+        "id": "Table G",
+        "name": "Conditions for Enhanced Funding (CEF) Confirmation for <Project Title>"
+      },
+      "sharedConditionSet": "APD-APX-C.conditions",
+      "reapprovalNote": "For a system in operations, the operative condition set at reapproval is 42 CFR 433.112(b)(1), (3), (4), and (7) through (22) per 42 CFR 433.119(a)(1), plus 42 CFR 433.116(d) through (j). Conditions (b)(2), (b)(5) and (b)(6) do not apply at reapproval.",
+      "validationRules": [
+        {
+          "id": "V-OAPD-APXC-001",
+          "severity": "blocker",
+          "check": "All applicable CEF rows present with Yes/No/N/A and explanations.",
+          "machineCheckable": true,
+          "basis": "Template instruction"
+        },
+        {
+          "id": "V-OAPD-APXC-002",
+          "severity": "info",
+          "check": "REAPPROVAL MODE. Evaluate against the 433.119(a)(1) subset, not the full initial-approval set.",
+          "machineCheckable": true,
+          "basis": "42 CFR 433.119(a)(1)"
+        },
+        {
+          "id": "V-OAPD-APXC-003",
+          "severity": "blocker",
+          "check": "HUMAN ATTESTATION GATE.",
+          "machineCheckable": true,
+          "basis": "Product guardrail"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    },
+    {
+      "id": "OAPD-APX-D",
+      "documentType": "MES_OAPD",
+      "number": "Appendix D",
+      "title": "Outcomes and Metrics",
+      "required": true,
+      "templateInstruction": "CMS-required outcomes and state-specific outcomes, with explanations for applicability",
+      "tables": [
+        {
+          "id": "Table H",
+          "name": "CMS-Required Outcomes and Metrics Table"
+        },
+        {
+          "id": "Table I",
+          "name": "State-Specific Outcomes and Metrics Table"
+        }
+      ],
+      "orwAffirmation": {
+        "requirement": "The state must affirm ORW submission by including in the OAPD the URL to its Metrics folder.",
+        "sourceQuote": "affirm that they submitted an ORW for the specified time frame by including the URL in the OAPD to their Metrics folder",
+        "sourceRef": "sho25003Faq",
+        "evidenceHistory": "Twelve months of ORW data are required for an APD submission unless the APD is submitted less than 12 months after certification. Six months are required to prepare for a certification review."
+      },
+      "validationRules": [
+        {
+          "id": "V-OAPD-APXD-001",
+          "severity": "blocker",
+          "check": "ORW AFFIRMATION. The OAPD contains a URL to the state's Metrics folder affirming ORW submission for the specified time frame.",
+          "machineCheckable": true,
+          "basis": "SHO #25-003 FAQ",
+          "flagshipRule": true
+        },
+        {
+          "id": "V-OAPD-APXD-002",
+          "severity": "error",
+          "check": "EVIDENCE HISTORY. Twelve months of ORW submissions exist, unless the APD is submitted less than 12 months after certification.",
+          "machineCheckable": true,
+          "basis": "SHO #25-003 FAQ"
+        },
+        {
+          "id": "V-OAPD-APXD-003",
+          "severity": "error",
+          "check": "Outcomes and metrics listed here match the Active metrics in the state's current ORW Metric Definitions tab.",
+          "machineCheckable": true,
+          "basis": "DERIVED; ORW cross-check"
+        }
+      ],
+      "provenance": "RETRIEVED"
+    }
+  ],
+  "aoaTemplate": {
+    "id": "AOA",
+    "title": "Medicaid Enterprise Systems Analysis of Alternatives",
+    "attachesTo": {
+      "apd": "APD-APX-B, referenced from APD-S3",
+      "oapd": "DISPUTED — see CONFLICT-001"
+    },
+    "regulatoryBasis": [
+      {
+        "citation": "45 CFR 95.610",
+        "note": "Cited in the AoA template's own background section."
+      },
+      {
+        "citation": "42 CFR 433.112(b)(13)",
+        "quote": "Promote sharing, leverage, and reuse of Medicaid technologies and systems within and among States."
+      }
+    ],
+    "minimumAlternatives": {
+      "quote": "The state describes the current state or at least two proposed alternatives (minimum of at least three alternatives in the absence of a legacy solution).",
+      "rule": "If a legacy solution exists: current state + at least 2 proposed alternatives. If no legacy solution: at least 3 alternatives."
+    },
+    "sections": [
+      {
+        "id": "AOA-VH",
+        "title": "Document Version History",
+        "columns": [
+          "Version Number",
+          "Date Updated",
+          "Update Description",
+          "Updated By",
+          "Approved By"
+        ]
+      },
+      {
+        "id": "AOA-PRA",
+        "title": "PRA Disclosure Statement"
+      },
+      {
+        "id": "AOA-BG",
+        "title": "AoA Background",
+        "note": "Cites 45 CFR 95.610"
+      },
+      {
+        "id": "AOA-USE",
+        "title": "Using This Document",
+        "instruction": "Remove all instructions before submission"
+      },
+      {
+        "id": "AOA-TOC",
+        "title": "Table of Contents"
+      },
+      {
+        "id": "AOA-ES",
+        "title": "AoA Executive Summary",
+        "table": "Table A",
+        "instruction": "One page, written last (after sections 1-6). Audience: SMA executive leadership, state IT, and CMS."
+      },
+      {
+        "id": "AOA-S1",
+        "number": "1",
+        "title": "AoA Approach",
+        "table": "Table B",
+        "maxLength": "Two pages maximum",
+        "requirements": [
+          "scope",
+          "participants and how they were selected",
+          "collaboration method",
+          "documentation approach",
+          "milestones",
+          "timeframes",
+          "methodology for identifying alternatives",
+          "bias-removal methods"
+        ]
+      },
+      {
+        "id": "AOA-S2",
+        "number": "2",
+        "title": "Market Research and Reuse",
+        "table": "Table C",
+        "subsections": [
+          {
+            "id": "AOA-S2.1",
+            "number": "2.1",
+            "title": "Market Research",
+            "requirements": [
+              "process",
+              "key contacts",
+              "takeaways on availability",
+              "cost estimates",
+              "lessons learned",
+              "alignment",
+              "timelines"
+            ]
+          },
+          {
+            "id": "AOA-S2.2",
+            "number": "2.2",
+            "title": "Reuse",
+            "requirements": [
+              "reusable artifacts, documents, services or systems, code segments and business rules",
+              "summarize the Enterprise MES Reuse Plan",
+              "if no reuse plan exists, build one using Appendix A",
+              "describe how artifacts will be made available to other states",
+              "explain why reuse options were not viable if applicable"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "AOA-S3",
+        "number": "3",
+        "title": "Evaluation Criteria",
+        "table": "Table D",
+        "requirement": "Criteria must include but aren't limited to reuse functionality, cost, benefits, and risks.",
+        "subsections": [
+          {
+            "id": "AOA-S3.1",
+            "number": "3.1",
+            "title": "Evaluation Methodology",
+            "requirement": "criteria selection including weighting; scoring approach must apply consistently across all criteria"
+          },
+          {
+            "id": "AOA-S3.2",
+            "number": "3.2",
+            "title": "Scoring Guide"
+          }
+        ]
+      },
+      {
+        "id": "AOA-S4",
+        "number": "4",
+        "title": "Identification and Evaluation of Alternatives",
+        "table": "Table G",
+        "subsections": [
+          {
+            "id": "AOA-S4.1",
+            "number": "4.1",
+            "title": "Alternative 1"
+          },
+          {
+            "id": "AOA-S4.2",
+            "number": "4.2",
+            "title": "Alternative 2"
+          },
+          {
+            "id": "AOA-S4.3",
+            "number": "4.3",
+            "title": "Alternative 3"
+          }
+        ],
+        "perAlternativeRequirements": [
+          "background narrative",
+          "technical risk summary",
+          "project management risk summary",
+          "cost-comparison analysis covering direct and indirect costs",
+          "qualitative and quantitative assessment against goals, requirements, and the Section 3 criteria"
+        ]
+      },
+      {
+        "id": "AOA-S5",
+        "number": "5",
+        "title": "Evaluation Matrix",
+        "table": "Table H"
+      },
+      {
+        "id": "AOA-S6",
+        "number": "6",
+        "title": "AoA Preferred Solution",
+        "table": "Table J"
+      },
+      {
+        "id": "AOA-APX-A",
+        "title": "Appendix A: Enterprise MES Reuse Plan",
+        "subsections": [
+          "Objectives and Goals",
+          "Scope of Reuse",
+          "Reuse Strategy",
+          "Identification of Reusable Components",
+          "Reuse Governance and Management",
+          "Technical Considerations",
+          "Tools and Infrastructure",
+          "Quality Assurance and Testing",
+          "Training and Awareness",
+          "Cost and Resource Considerations",
+          "Challenges and Risks",
+          "Review and Improvement",
+          "Compliance and Licensing"
+        ]
+      }
+    ],
+    "scoringGuide": {
+      "table": "Table F: Scoring Guide (Example)",
+      "scale": [
+        {
+          "score": 1,
+          "description": "alternative is infeasible because it does not meet the needs"
+        },
+        {
+          "score": 2,
+          "description": "alternative is suboptimal because it partially meets the needs"
+        },
+        {
+          "score": 3,
+          "description": "alternative adequately meets the needs but may have minor shortcomings"
+        },
+        {
+          "score": 4,
+          "description": "alternative meets the needs and benchmarks"
+        },
+        {
+          "score": 5,
+          "description": "alternative exceeds the needs and benchmarks"
+        }
+      ],
+      "customizable": true
+    },
+    "evaluationCriteria": {
+      "table": "Table E: Example Alternatives Analysis Criteria",
+      "count": 15,
+      "weightColumnBlankInTemplate": true,
+      "weightingOptional": true,
+      "criteria": [
+        {
+          "n": 1,
+          "name": "Reuse",
+          "description": "Solution adapts existing capabilities within the state, capabilities in use by another state, or those available from the vendor community, with minimal customization and/or incorporates reuse into the design of new capabilities."
+        },
+        {
+          "n": 2,
+          "name": "Functionality",
+          "description": "Solution meets the technical requirements and functional specifications identified by the state. (Each alternative may be scored against multiple requirements.)"
+        },
+        {
+          "n": 3,
+          "name": "Cost",
+          "description": "The solution is evaluated for its total cost of ownership, including design, development, testing, training, migration, implementation, licensing, and operations and maintenance."
+        },
+        {
+          "n": 4,
+          "name": "Benefits",
+          "description": "Solution meets non-financial business needs. (Use the benefits identified from the analysis summarized in Section 1.)"
+        },
+        {
+          "n": 5,
+          "name": "Risks",
+          "description": "Expectations for the overall solution risk are low. (Each alternative may be scored against multiple risks.)"
+        },
+        {
+          "n": 6,
+          "name": "Scalability",
+          "description": "Solution can effectively and efficiently scale with the project's growth and changing needs."
+        },
+        {
+          "n": 7,
+          "name": "Ease of Implementation",
+          "description": "Solution can be implemented without disrupting existing operations."
+        },
+        {
+          "n": 8,
+          "name": "Vendor Experience",
+          "description": "The vendor providing the solution has experience, client references, and a demonstrated history of similar MES implementations."
+        },
+        {
+          "n": 9,
+          "name": "User Experience",
+          "description": "Solution is user friendly, and the end users will not require extensive ongoing training."
+        },
+        {
+          "n": 10,
+          "name": "Innovation Potential",
+          "description": "Solution is well-positioned to support future technical enhancements and leverages modern tools/technology stacks."
+        },
+        {
+          "n": 11,
+          "name": "Organizational Impact",
+          "description": "Solution can be supported by the current organizational and personnel structure and constraints."
+        },
+        {
+          "n": 12,
+          "name": "Schedule",
+          "description": "Solution will be implemented within a time frame that meets the business needs."
+        },
+        {
+          "n": 13,
+          "name": "Maintainability",
+          "description": "Solution will not be difficult or costly to maintain."
+        },
+        {
+          "n": 14,
+          "name": "Security",
+          "description": "Solution will conform to government and industry security standards."
+        },
+        {
+          "n": 15,
+          "name": "Accessibility",
+          "description": "Solution meets accessibility standards established under Section 508 of the Rehabilitation Act or standards that provide greater accessibility for individuals with disabilities and comply with federal civil rights laws."
+        }
+      ]
+    },
+    "evaluationMatrix": {
+      "table": "Table I: Evaluation Matrix (Example)",
+      "columns": [
+        "Criteria",
+        "Weight",
+        "Score: Alternative 1",
+        "Score: Alternative 2",
+        "Score: Alternative 3"
+      ],
+      "cellInstruction": "Score (per Scoring Guide), then multiply by weight.",
+      "terminalRows": [
+        "Total",
+        "Solution Rank"
+      ]
+    },
+    "reuseRule": {
+      "finding": "Reuse is a MANDATORY SCORING CRITERION, not a mandatory alternative.",
+      "detail": "Reuse is criterion #1 in Table E and Section 3 states criteria 'must include' reuse. Section 2.2 requires describing reuse alternatives evaluated and, if none were viable, explaining why. No template text requires that one of the enumerated alternatives BE a transfer/reuse option.",
+      "productImplication": "The Compliance Validator must check for the reuse criterion and the why-not explanation, NOT for the presence of a reuse alternative. Getting this distinction wrong produces false failures."
+    },
+    "validationRules": [
+      {
+        "id": "V-AOA-001",
+        "severity": "blocker",
+        "check": "MINIMUM ALTERNATIVES. If a legacy solution exists, the AoA covers the current state plus at least two proposed alternatives. If no legacy solution exists, at least three alternatives.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 4",
+        "flagshipRule": true
+      },
+      {
+        "id": "V-AOA-002",
+        "severity": "blocker",
+        "check": "REUSE CRITERION. Reuse appears in the evaluation criteria and is scored for every alternative.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 3; 42 CFR 433.112(b)(13)",
+        "flagshipRule": true
+      },
+      {
+        "id": "V-AOA-003",
+        "severity": "blocker",
+        "check": "REUSE WHY-NOT. If no reuse option was viable, an explicit written explanation is present in Section 2.2.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 2.2"
+      },
+      {
+        "id": "V-AOA-004",
+        "severity": "blocker",
+        "check": "REQUIRED CRITERIA. Evaluation criteria include, at minimum, reuse, functionality, cost, benefits, and risks.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 3: criteria 'must include but aren't limited to reuse functionality, cost, benefits, and risks'"
+      },
+      {
+        "id": "V-AOA-005",
+        "severity": "blocker",
+        "check": "SCORING CONSISTENCY. Every alternative is scored against every criterion; no blank cells in the evaluation matrix.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 3.1: scoring approach must apply consistently across all criteria"
+      },
+      {
+        "id": "V-AOA-006",
+        "severity": "blocker",
+        "check": "MATRIX ARITHMETIC. If weights are applied, every weighted score equals score x weight, column totals equal the sum of weighted scores, and Solution Rank is consistent with the totals.",
+        "machineCheckable": true,
+        "basis": "AoA template Table I cell instruction",
+        "flagshipRule": true
+      },
+      {
+        "id": "V-AOA-007",
+        "severity": "blocker",
+        "check": "PREFERRED SOLUTION CONSISTENCY. The preferred solution in Section 6 is the top-ranked alternative in the Section 5 matrix, or a written justification explains the departure.",
+        "machineCheckable": true,
+        "basis": "DERIVED; internal consistency",
+        "flagshipRule": true,
+        "rationale": "This is the single most common way an AoA reveals itself as a retrofit."
+      },
+      {
+        "id": "V-AOA-008",
+        "severity": "error",
+        "check": "An Enterprise MES Reuse Plan is summarized in Section 2.2 or built at Appendix A.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 2.2"
+      },
+      {
+        "id": "V-AOA-009",
+        "severity": "error",
+        "check": "Every score is an integer from 1 to 5 matching the Scoring Guide scale in use.",
+        "machineCheckable": true,
+        "basis": "AoA template Table F"
+      },
+      {
+        "id": "V-AOA-010",
+        "severity": "error",
+        "check": "Section 1 does not exceed two pages; the Executive Summary does not exceed one page.",
+        "machineCheckable": true,
+        "basis": "AoA template length instructions"
+      },
+      {
+        "id": "V-AOA-011",
+        "severity": "error",
+        "check": "All template instruction text has been removed before submission.",
+        "machineCheckable": true,
+        "basis": "AoA template: 'Remove all instructions before submission'"
+      },
+      {
+        "id": "V-AOA-012",
+        "severity": "error",
+        "check": "The preferred solution's cost is consistent with the APD Section 8 budget and the MDBT.",
+        "machineCheckable": true,
+        "basis": "DERIVED; narrative/budget reconciliation"
+      },
+      {
+        "id": "V-AOA-013",
+        "severity": "error",
+        "check": "Every alternative has a technical risk summary, a project management risk summary, and a direct/indirect cost comparison.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 4"
+      },
+      {
+        "id": "V-AOA-014",
+        "severity": "warning",
+        "check": "Bias-removal methods are described in Section 1.",
+        "machineCheckable": true,
+        "basis": "AoA template Section 1"
+      }
+    ],
+    "provenance": "RETRIEVED"
+  },
+  "mdbt": {
+    "id": "MDBT",
+    "title": "MES MDBT + CHIP",
+    "versionRetrieved": "1.06 [5/1/2025]",
+    "versionCurrent": "1.09 (per SHO #25-003 FAQ)",
+    "versionRisk": "HIGH — structure below is V1.06. Re-verify against V1.09 before the Budget Engine is built against it.",
+    "worksheets": [
+      "Instructions",
+      "MES Master",
+      "New or Updated =>",
+      "MES Project 1 - Sample",
+      "MES Project 2 - Sample",
+      "No Changes =>",
+      "Closed =>"
+    ],
+    "mechanics": [
+      "The MES Master sheet is a total of the MES project sheets.",
+      "Any new or updated projects should follow the 'New or Updated =>' tab",
+      "all closed projects should follow the 'Closed =>' tab",
+      "all projects without changes should follow the 'No Changes =>' tab",
+      "Gray shaded cells indicate formulas and are locked for viewing only.",
+      "If you run into issues with this workbook, contact your State Officer."
+    ],
+    "rowAxis": [
+      "Type of Activity",
+      "Reference(s)"
+    ],
+    "activityRows": [
+      "MMIS",
+      "E&E"
+    ],
+    "fiscalYearColumns": "FFY 2011 through FFY 2035, plus Total FFY 2011-2035",
+    "columnGroups": {
+      "enhanced": [
+        "CMS Share M&O (90% FFP)",
+        "State Share M&O (10%)",
+        "CMS Share DDI (90% FFP)",
+        "State Share DDI (10%)",
+        "CMS Share DDI (75% FFP)",
+        "State Share DDI (25%)",
+        "CMS Share M&O (75% FFP)",
+        "State Share M&O (25%)",
+        "E&E Staff (75% FFP)",
+        "E&E Staff (25%)",
+        "Enhanced Funding FFP Total",
+        "Enhanced Funding State Share Total"
+      ],
+      "nonEnhanced": [
+        "CMS Share DDI (50% FFP)",
+        "State Share DDI (50%)",
+        "CMS Share M&O (50% FFP)",
+        "State Share M&O (50%)",
+        "Non-Enhanced Funding FFP Total",
+        "Non-Enhanced Funding State Share Total"
+      ],
+      "chip": [
+        "CHIP FFP %",
+        "CHIP State %",
+        "CHIP FFP Share",
+        "CHIP State Share"
+      ],
+      "rollup": [
+        "APD Total FFP",
+        "APD Total State Share"
+      ]
+    },
+    "chipNote": "The CHIP rate is an input field, not a fixed value.",
+    "structuralFinding": "DDI versus M&O is separated by column pair within each match rate, not by separate tabs or row blocks. The grid is (DDI | M&O) x (90 | 75 | 50) x (CMS share | State share), with E&E Staff carrying its own 75/25 pair.",
+    "anomaly": {
+      "id": "CONFLICT-005",
+      "description": "A 'CMS Share M&O (90% FFP)' column appears in the retrieved V1.06 structure. 42 CFR 433.116(a) sets operations FFP at 75 percent. This may be a genuine template artifact, a legacy column, or a PDF-extraction error.",
+      "action": "Confirm against the real .xlsx before the Budget Engine treats 90 percent M&O as a valid combination. Until confirmed, V-APD-S8-003 should flag any M&O cost claimed at 90 percent for human review rather than auto-failing it.",
+      "confidence": "LOW"
+    },
+    "provenance": "RETRIEVED (V1.06 only, via PRA PDF conversion; single extraction pass on column structure)"
+  },
+  "procurementChecklist": {
+    "id": "PROC-CHECKLIST",
+    "title": "Medicaid Enterprise Systems Procurement Checklist",
+    "ombControlNumber": "0938-1268 (CMS-10536)",
+    "burdenEstimate": "20 hours per response",
+    "coverFields": [
+      "State",
+      "Purpose of Solicitation",
+      "Scope Summary",
+      "Submitted By"
+    ],
+    "instruction": "The Procurement Documents checklist should be submitted to CMS in support of a request for review and approval prior to the release of procurement solicitations. This checklist offers states the opportunity to attest that they have met the various regulatory requirements surrounding the issuance of a procurement document with the intent to implement solutions to support Medicare Enterprise Systems (MES) modules.",
+    "instructionNote": "'Medicare' in the sentence above is a typo in the CMS source document; it means Medicaid. Reproduced verbatim.",
+    "columnInstructions": [
+      "SMA should populate the column labeled 'Section and Page Applicable' with the name of the proposal section and specific page numbers where the criteria are addressed.",
+      "SMA should populate the column labeled 'Comments' with any comments they believe will assist in reviewing the specific criteria."
+    ],
+    "table1": {
+      "name": "Procurement Criteria – Regulatory Requirements",
+      "columns": [
+        "Criteria",
+        "Checklist Item",
+        "Section & Page",
+        "Comments"
+      ],
+      "items": [
+        {
+          "n": 1,
+          "text": "Solicitation requires that any systems and modules developed, installed, or improved with a ninety (90) percent federal financial participation (FFP) match include documentation of components and procedures so that the systems can be operated by various contractors or other users.",
+          "regulatoryBasis": "42 CFR 433.112(b)(20)"
+        },
+        {
+          "n": 2,
+          "text": "Major timeframes are provided (proposal response, evaluation, award, negotiation, implementation). 60–90 days for proposals encouraged."
+        },
+        {
+          "n": 3,
+          "text": "Provides Scope of Work (SOW)."
+        },
+        {
+          "n": 4,
+          "text": "Instructions for answering bidder questions are included."
+        },
+        {
+          "n": 5,
+          "text": "Requires proof of financial stability."
+        },
+        {
+          "n": 6,
+          "text": "Includes performance standards and Service Level Agreements (SLAs) with measurable, specific outcomes such as quality levels, error rates, and other quantitative measures."
+        },
+        {
+          "n": 7,
+          "text": "Includes timeframe for price guarantee."
+        },
+        {
+          "n": 8,
+          "text": "Requires bidder agreement to payment reductions for nonperformance (linked to performance standards)."
+        },
+        {
+          "n": 9,
+          "text": "Specifies whether a bidder's conference or demonstration is required."
+        },
+        {
+          "n": 10,
+          "text": "Includes evaluation criteria and scoring methodology (weights, reasonableness)."
+        },
+        {
+          "n": 11,
+          "text": "Provides technical requirements."
+        },
+        {
+          "n": 12,
+          "text": "Contract term is defined and incentivizes bidders.",
+          "cmsRecommendation": "CMS recommends that, where possible, contract terms should not exceed eight (8) years, including separate optional renewals.",
+          "note": "Recommendation, not a regulation. Validate as a warning, never a blocker."
+        },
+        {
+          "n": 13,
+          "text": "Lists procedures for changes to the document after proposals are received."
+        },
+        {
+          "n": 14,
+          "text": "Requirements are clear, concise, and support fair competition."
+        },
+        {
+          "n": 15,
+          "text": "Describes the process for resolving contract disputes, protests, and claims."
+        },
+        {
+          "n": 16,
+          "text": "Includes a copy of the proposed contract terms and conditions."
+        },
+        {
+          "n": 17,
+          "text": "Describes how stakeholders and users are involved in design, development, and/or implementation."
+        },
+        {
+          "n": 18,
+          "text": "Identifies if there are onsite presence requirements for contractors."
+        }
+      ]
+    },
+    "table2": {
+      "name": "Overall Expectations",
+      "columns": [
+        "Criteria",
+        "Expectations",
+        "Comments (optional)"
+      ],
+      "items": [
+        {
+          "n": 1,
+          "text": "Solicitation complies with all applicable federal regulations."
+        },
+        {
+          "n": 2,
+          "text": "Ensures full and open competition. No conflict of interest or advantage to proposal drafters.",
+          "regulatoryBasis": "45 CFR 95.613; 2 CFR 200.319"
+        },
+        {
+          "n": 3,
+          "text": "The Medicaid Agency will maintain oversight to ensure that contractors perform in accordance with the terms, conditions, and specifications of resulting contracts."
+        },
+        {
+          "n": 4,
+          "text": "The scope of Work (SOW) is clear and aligns with the approved APD.",
+          "productNote": "Machine-checkable against APD Section 5 and Section 7."
+        },
+        {
+          "n": 5,
+          "text": "Describes technical requirements clearly to ensure open solicitation."
+        },
+        {
+          "n": 6,
+          "text": "Requirements are clear, concise, and do not restrict fair competition, such as by specifying the use of a proprietary tool or a specific service provider."
+        },
+        {
+          "n": 7,
+          "text": "Outcome-oriented (focus on 'what' to achieve, not 'how'); includes metrics"
+        },
+        {
+          "n": 8,
+          "text": "The state will maintain records sufficient to detail the history of procurement. These records will include, but are not necessarily limited to, the following: rationale for the method of procurement, selection of contract type, contractor selection or rejection, and the basis for the contract price."
+        },
+        {
+          "n": 9,
+          "text": "Technical requirements support multiple browsers, operating systems, and mobile users."
+        },
+        {
+          "n": 10,
+          "text": "Includes project org chart or description of roles/responsibilities."
+        }
+      ]
+    },
+    "validationRules": [
+      {
+        "id": "V-PROC-001",
+        "severity": "blocker",
+        "check": "A completed checklist accompanies every procurement instrument submitted to CMS for prior approval.",
+        "machineCheckable": true,
+        "basis": "SHO #25-003 FAQ"
+      },
+      {
+        "id": "V-PROC-002",
+        "severity": "blocker",
+        "check": "Table 1 item 1 is satisfied — the solicitation carries the 90 percent FFP documentation clause required by 42 CFR 433.112(b)(20).",
+        "machineCheckable": true,
+        "basis": "42 CFR 433.112(b)(20)"
+      },
+      {
+        "id": "V-PROC-003",
+        "severity": "blocker",
+        "check": "Every Table 1 item has a Section & Page reference or an explanation of non-applicability.",
+        "machineCheckable": true,
+        "basis": "Checklist column instruction"
+      },
+      {
+        "id": "V-PROC-004",
+        "severity": "blocker",
+        "check": "The solicitation includes software ownership and federal license clauses satisfying 45 CFR 95.617.",
+        "machineCheckable": true,
+        "basis": "45 CFR 95.617(a)-(b)"
+      },
+      {
+        "id": "V-PROC-005",
+        "severity": "error",
+        "check": "SOW ALIGNMENT. The scope of work aligns with the approved APD Section 5 acquisition summary and Section 7 activity schedule.",
+        "machineCheckable": true,
+        "basis": "Checklist Table 2 item 4",
+        "flagshipRule": true
+      },
+      {
+        "id": "V-PROC-006",
+        "severity": "warning",
+        "check": "Contract term including option years does not exceed 8 years.",
+        "machineCheckable": true,
+        "basis": "Checklist Table 1 item 12 — CMS recommendation only."
+      },
+      {
+        "id": "V-PROC-007",
+        "severity": "warning",
+        "check": "Proposal response window is between 60 and 90 days.",
+        "machineCheckable": true,
+        "basis": "Checklist Table 1 item 2 — encouraged, not required."
+      },
+      {
+        "id": "V-PROC-008",
+        "severity": "error",
+        "check": "Section 508 accessibility requirements appear in the technical requirements.",
+        "machineCheckable": true,
+        "basis": "42 CFR 433.112(b)(12)"
+      }
+    ],
+    "provenance": "RETRIEVED"
+  },
+  "crossDocumentRules": [
+    {
+      "id": "X-001",
+      "name": "Narrative/budget reconciliation",
+      "severity": "blocker",
+      "check": "Every dollar figure stated in APD narrative sections equals the corresponding figure in Table D, Table H, and the MDBT.",
+      "rationale": "Budget/narrative discrepancy is the most frequently cited reason CMS returns an APD. This is the Compliance Validator's flagship demo moment.",
+      "componentRules": [
+        "V-APD-S8-001",
+        "V-APD-S6-004",
+        "V-APD-S7-003",
+        "V-APD-S10-004",
+        "V-AOA-012"
+      ]
+    },
+    {
+      "id": "X-002",
+      "name": "Scope coherence",
+      "severity": "blocker",
+      "check": "The scope in Section 2.2, the activities in Section 7 Table C, the acquisitions in Section 5, and the budget in Section 8 describe the same project.",
+      "componentRules": [
+        "V-APD-S2-004",
+        "V-APD-S7-003",
+        "V-APD-S5-004"
+      ]
+    },
+    {
+      "id": "X-003",
+      "name": "Attestation integrity",
+      "severity": "blocker",
+      "check": "No Appendix C or Table J attestation asserts something the document itself contradicts.",
+      "componentRules": [
+        "V-APD-APXC-004",
+        "V-APD-APXC-005",
+        "V-APD-APXC-006",
+        "V-APD-APXC-008"
+      ],
+      "rationale": "An attestation the document contradicts is worse than a missing one — it is a false statement to the federal government."
+    },
+    {
+      "id": "X-004",
+      "name": "Change Radar baseline integrity",
+      "severity": "error",
+      "check": "Every approved APD writes a baseline: total project cost, cost-benefit estimate, milestone dates, procurement approach, scope statement, and cost allocation methodology. The Change Sentinel monitors live project data against these baselines.",
+      "componentRules": [
+        "V-APD-S4-003",
+        "V-APD-S7-005",
+        "V-APD-S8-008",
+        "V-APD-S1-003",
+        "V-APD-S10-006"
+      ]
+    },
+    {
+      "id": "X-005",
+      "name": "Human approval gate",
+      "severity": "blocker",
+      "check": "No document reaches submission-ready state without a named human approver recorded for every attestation and for the document as a whole. The system never auto-submits to CMS and never attests on a state's behalf.",
+      "componentRules": [
+        "V-APD-S12-003",
+        "V-APD-APXC-009",
+        "V-OAPD-APXC-003"
+      ],
+      "rationale": "Product guardrail, and the answer to the 'AI wrote our federal funding request' objection."
+    },
+    {
+      "id": "X-006",
+      "name": "Enhanced-rate eligibility coherence",
+      "severity": "blocker",
+      "check": "Any cost claimed at 90 percent is DDI on a system meeting 42 CFR 433.112, with prior APD approval before expenditure. Any cost claimed at 75 percent is operation of an approved system under 42 CFR 433.116.",
+      "componentRules": [
+        "V-APD-S8-002",
+        "V-APD-S8-003",
+        "V-APD-S8-004",
+        "V-OAPD-S3-001"
+      ]
+    }
+  ],
+  "knownConflicts": [
+    {
+      "id": "CONFLICT-001",
+      "severity": "HIGH — affects the AoA Builder's output target",
+      "title": "SHO #25-003 and the published templates disagree on where the AoA goes",
+      "sourceA": {
+        "document": "SHO #25-003 (2025-08-06)",
+        "quote": "States will be expected to use the template to complete Section 5 of the new MES APD and/or Appendix A of the new MES OAPD.",
+        "url": "https://www.medicaid.gov/federal-policy-guidance/downloads/sho25003.pdf",
+        "provenance": "RETRIEVED verbatim"
+      },
+      "sourceB": {
+        "document": "SHO #25-003 FAQ",
+        "quote": "During the PAPD, only a commitment to perform the AoA is required via Section 3. The AoA should be completed and included as part of the initial IAPD (typically referenced within Section 3 and included via Appendix B).",
+        "provenance": "RETRIEVED verbatim"
+      },
+      "sourceC": {
+        "document": "MES APD template (as published)",
+        "finding": "Section 3 is 'Requirements Analysis, Feasibility Study, Analysis of Alternatives Considerations' and directs the reader to Appendix B for the complete AoA. Section 5 is 'Acquisitions'.",
+        "provenance": "RETRIEVED"
+      },
+      "sourceD": {
+        "document": "MES OAPD template (as published)",
+        "finding": "Appendix A is 'Proposed Activity Schedule for the Project'. No AoA reference appears in OAPD Appendices A through D.",
+        "provenance": "RETRIEVED"
+      },
+      "assessment": "The most likely explanation is that SHO #25-003 described the AoA's placement against a draft template numbering that changed before publication. The published templates plus the FAQ are internally consistent with each other and inconsistent with the SHO.",
+      "resolution": "BUILD AGAINST THE PUBLISHED TEMPLATES AND THE FAQ: AoA lives at APD Section 3 (reference) plus Appendix B (full document). Surface the SHO's conflicting sentence to the user rather than hiding it. Confirm with a CMS MES State Officer.",
+      "productImpact": "The AoA Builder must not write into APD Section 5 or OAPD Appendix A. Note the project's own standing instructions currently repeat the SHO's Section 5 / OAPD Appendix A framing — that should be corrected."
+    },
+    {
+      "id": "CONFLICT-002",
+      "severity": "LOW — cosmetic but it will break a field mapping",
+      "title": "Appendix C table letter ambiguity",
+      "detail": "The retrieved PRA conversion of the MES APD template renders the Appendix C instruction as referring to 'Table J' while separately labeling the CEF grid 'Table K'. Table J is the Section 12 Assurances table. One of these is an extraction artifact.",
+      "resolution": "Confirm the actual table letter against the Word original before hard-coding it into the field mapping."
+    },
+    {
+      "id": "CONFLICT-003",
+      "severity": "MEDIUM",
+      "title": "Cost principles citation — OMB Circular A-87 vs 2 CFR Part 200",
+      "detail": "The MES APD template Section 10 instructs states to follow 45 CFR 95.507 and OMB Circular A-87. OMB Circular A-87 was superseded by 2 CFR Part 200. Both 42 CFR 433.112(b)(7) ('in accordance with 2 CFR parts 200 and 300, subpart E') and 45 CFR 95.613(a) point to 2 CFR parts 200 and 300.",
+      "resolution": "Draft to 2 CFR Part 200 while reproducing the template's own citation where the template requires it. Do not assert to a customer that the template's A-87 citation is an error without confirming with a State Officer."
+    },
+    {
+      "id": "CONFLICT-004",
+      "severity": "LOW",
+      "title": "OAPD length — regulation says two pages, template is longer",
+      "detail": "45 CFR 95.610(c)(3) describes the Operational APDU as 'no more than two pages' containing summary of activities, acquisitions, and annual budget by project/system. The current CMS MES OAPD template has three numbered sections plus four appendices and is materially longer.",
+      "resolution": "The template governs in practice. Note the tension; do not tell a customer their OAPD must be two pages."
+    },
+    {
+      "id": "CONFLICT-005",
+      "severity": "MEDIUM — affects Budget Engine validation logic",
+      "title": "MDBT V1.06 shows a 90 percent M&O column",
+      "detail": "See mdbt.anomaly. 42 CFR 433.116(a) sets operations FFP at 75 percent.",
+      "resolution": "Flag 90 percent M&O for human review rather than auto-failing until the real .xlsx is opened and V1.09 is obtained."
+    },
+    {
+      "id": "CONFLICT-006",
+      "severity": "MEDIUM — affects whether a MITA SS-A check exists at all",
+      "title": "The MITA State Self-Assessment obligation was removed from current guidance but not repealed",
+      "detail": "SMC Guidance v1.0 (April 2022) contained a 'MITA STATE SELF-ASSESSMENTS' section requiring the SS-A. SMC Guidance v2.0 (October 21, 2025) deleted it. SHO #25-003, its FAQ, and the current MES APD template never mention MITA or the SS-A outside CEF 11. Meanwhile the MITA Governance Board FAQ still states states 'are required to submit a MITA SS-A in support of their request for enhanced federal matching,' citing 42 CFR 433.112(b)(11) and 433.116(b), (c), and (i). The 'What Changed' crosswalk does not mention MITA at all, so CMS did not document this as a deliberate removal.",
+      "resolution": "Do NOT build a hard 'SS-A attached?' gate. Make it a configurable, state-specific check with the conflict surfaced. The only durable citable MITA obligation is CEF 11.",
+      "additionalFinding": "There is no CMS primary source for an ANNUAL SS-A cadence. CIB 07/05/2013 states a one-time trigger (within twelve months of MITA 3.0 release); CIB 08/05/2014 says CMS 'is encouraging' completion and 'Upon receipt of state submission, CMS will consider this requirement met.' The widely repeated 'annually' figure traces to state and vendor documents, not CMS. Labeled ASSUMPTION."
+    },
+    {
+      "id": "CONFLICT-007",
+      "severity": "MEDIUM — affects the Ongoing Obligations Engine",
+      "title": "Operational reporting cadence — the annual OAPD-supporting report may or may not survive",
+      "detail": "SHO #25-003's cadence/frequency distinction resolves the monthly-vs-quarterly EVV question cleanly. What remains unresolved is whether the annual OAPD-supporting operational report from SMDL #22-001 and SMC Guidance v1.0 is a surviving separate obligation or was replaced by the monthly ORW. CMS's own Certification Repository states both: the Ongoing Reporting index says annual, the Ongoing Reporting Overview says monthly AND quarterly EVV AND annual with OAPD requests.",
+      "resolution": "Encode monthly ORW submission for non-EVV, quarterly for EVV on the Table 2 calendar, monthly capture throughout, monthly PSR through DDI and post-certification. Flag the annual-OAPD question as an open item requiring CMS MES State Officer confirmation. Never assert a flat 'everything is monthly'.",
+      "seeAlso": "rule-register.json — RR-RPT-ORW, RR-RPT-ORW-EVV, RR-RPT-PSR"
+    }
+  ],
+  "openGaps": [
+    {
+      "id": "GAP-001",
+      "item": "MDBT Unified Version 1.09",
+      "impact": "Budget Engine is being specified against V1.06.",
+      "fix": "Open mes-mdbt.xlsx directly, or obtain V1.09 from a CMS State Officer.",
+      "blocks": [
+        "Budget Engine build"
+      ]
+    },
+    {
+      "id": "GAP-002",
+      "item": "SMC Intake Form internal structure",
+      "impact": "SMC Certification Tracker field mapping incomplete.",
+      "fix": "Open intake-form.xlsx. Known: three tabs — Conditions for Enhanced Funding; Outcomes & Metrics; Required Artifacts."
+    },
+    {
+      "id": "GAP-003",
+      "item": "Project Status Report template structure",
+      "impact": "Ongoing Obligations Engine cannot generate the monthly PSR without the field list.",
+      "fix": "Retrieve https://www.reginfo.gov/public/do/DownloadDocument?objectID=162300001 (identified, not yet extracted), or open project-status-report.xlsx."
+    },
+    {
+      "id": "GAP-004",
+      "item": "CEF evidence-mapping table (Reference # / Condition for Enhanced Funding / State ORR Evidence)",
+      "impact": "High value for the SMC Certification Tracker's evidence collection.",
+      "fix": "Retrieve https://www.reginfo.gov/public/do/DownloadDocument?objectID=162300101 (identified, not yet extracted)."
+    },
+    {
+      "id": "GAP-005",
+      "item": "42 CFR 435.560 verbatim text (community engagement good faith effort exemption)",
+      "impact": "Cannot yet encode the exemption request process.",
+      "fix": "Re-pull from eCFR on or just after 2026-07-31 when CMS-2454-IFC takes effect. Not codified as of 2026-07-27."
+    },
+    {
+      "id": "GAP-006",
+      "item": "Appendix C table letter (Table J vs Table K)",
+      "impact": "Field mapping.",
+      "fix": "Open mes-apd-template.docx."
+    },
+    {
+      "id": "GAP-007",
+      "item": "Whether Appendix A, D and E are required for a PAPD",
+      "impact": "The requiredBy matrix carries 'check template' for these three on PAPD. Appendix C is confirmed not required for PAPD; the others were not explicitly stated in the retrieved conversion.",
+      "fix": "Open mes-apd-template.docx."
+    },
+    {
+      "id": "GAP-008",
+      "item": "Part 11 of the State Medicaid Manual",
+      "impact": "42 CFR 433.112(b)(2) and 433.119(a)(3) both make Part 11 system requirements a funding condition. We have not retrieved Part 11.",
+      "fix": "Locate and index the current State Medicaid Manual Part 11.",
+      "priority": "HIGH — this is a load-bearing citation we cannot currently validate against."
+    }
+  ]
+}

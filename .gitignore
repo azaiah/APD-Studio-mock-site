@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# Never commit anything that could contain member-level data.
+# If a file matching these lands in the repo, that is an incident, not a mistake.
+*.phi.*
+/tests/fixtures/**/unredacted/
