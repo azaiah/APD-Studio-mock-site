@@ -1,6 +1,20 @@
 # apps/web — the portal
 
-**Not started. Blocked, deliberately.**
+## Current scope
+
+The scenario-independent regulatory console is implemented:
+
+- `/sign-in` is an honest demo gateway. It does not create a fake session.
+- `/rules` browses the typed Rule Register.
+- `/sections` shows the APD section matrix and flagship checks.
+- `/cef` shows all 22 CEFs and the 19-condition reapproval subset.
+- `/integrity` surfaces conflicts, open questions, and source gaps.
+
+These views read package data from `@apd-studio/rules` and
+`@apd-studio/templates`. The identity-provider and password controls remain
+disabled because no authentication backend exists.
+
+## Still blocked, deliberately
 
 Two research artifacts have to land first, and building before they do means
 building the wrong thing:
@@ -13,10 +27,10 @@ building the wrong thing:
 - **R12 — demo script.** The 12-minute end-to-end walkthrough that defines what
   screens exist and in what order.
 
-See `WORK-ORDER.md` Phase 3. Until then, build the budget engine and validator
-families — they have real tests and no dependency on the scenario.
+See `WORK-ORDER.md` Phase 3. Until then, do not build Project Register forms,
+the authoring workspace, scenario validator output, or demo-flow ordering.
 
-## When you do start
+## When scenario work starts
 
 Build the demo script's path first and nothing else, until it works.
 

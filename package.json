@@ -2,7 +2,7 @@
   "name": "apd-studio",
   "private": true,
   "version": "0.1.0",
-  "description": "APD Studio \u2014 Medicaid Advance Planning Document compliance platform (site + portal)",
+  "description": "APD Studio — Medicaid Advance Planning Document compliance platform (site + portal)",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -12,6 +12,7 @@
     "node": ">=20.11"
   },
   "scripts": {
+    "dev": "pnpm --filter @apd-studio/site dev & pnpm --filter @apd-studio/web dev",
     "build": "turbo run build",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
@@ -19,6 +20,8 @@
     "verify": "pnpm typecheck && pnpm test"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.62.0",
     "@types/node": "^22.7.0",
     "turbo": "^2.1.0",
     "typescript": "^5.6.0",

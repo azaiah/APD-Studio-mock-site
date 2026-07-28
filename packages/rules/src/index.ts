@@ -1,7 +1,7 @@
 import raw from '../data/rule-register.json' with { type: 'json' };
-import { RuleRegister, type Rule, type FundingTrack, type RuleCategory } from './schema.js';
+import { RuleRegister, type Rule, type FundingTrack, type RuleCategory } from './schema';
 
-export * from './schema.js';
+export * from './schema';
 
 /**
  * Parsed and validated at module load. If the register is malformed, the app
@@ -10,6 +10,9 @@ export * from './schema.js';
 export const register: RuleRegister = RuleRegister.parse(raw);
 
 export const rules: readonly Rule[] = register.rules;
+
+export const openQuestions = register.openQuestions;
+export const corrections = register.correctionsToPriorProjectAssumptions || [];
 
 const byIdMap = new Map(rules.map((r) => [r.id, r]));
 

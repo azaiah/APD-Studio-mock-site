@@ -1,0 +1,30 @@
+{
+  "name": "@apd-studio/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "start": "next start --port 3003",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@apd-studio/rules": "workspace:*",
+    "@apd-studio/templates": "workspace:*",
+    "@apd-studio/ui": "workspace:*",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.23",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

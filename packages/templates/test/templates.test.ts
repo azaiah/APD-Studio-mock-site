@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  schema, sections, sectionById, requiredSections,
+  sections, sectionById, requiredSections,
   allValidationRules, flagshipRules, machineCheckableRules,
+  knownConflicts, openGaps,
 } from '../src/index.js';
 
 describe('APD section schema', () => {
@@ -24,18 +25,18 @@ describe('APD section schema', () => {
   });
 
   it('carries all 22 Conditions for Enhanced Funding', () => {
-    const appxC = sectionById('APD-APX-C') as unknown as { conditions: unknown[] };
+    const appxC = sectionById('APD-APX-C');
     expect(appxC.conditions).toHaveLength(22);
+    expect(appxC.conditions?.filter((condition) => condition.appliesAtInitialApproval)).toHaveLength(22);
   });
 
   // 42 CFR 433.119(a)(1): reapproval requires (b)(1), (3), (4), and (7)-(22).
   // (b)(2), (b)(5), (b)(6) drop out. Most tools miss this; it is a differentiator.
   it('reapproval condition set excludes b2, b5, b6', () => {
-    const appxC = sectionById('APD-APX-C') as unknown as {
-      reapprovalSubset: { appliesOnReapproval: string[]; excludedOnReapproval: string[] };
-    };
-    expect(appxC.reapprovalSubset.excludedOnReapproval.sort()).toEqual(['b2', 'b5', 'b6']);
-    expect(appxC.reapprovalSubset.appliesOnReapproval).toHaveLength(19);
+    const appxC = sectionById('APD-APX-C');
+    expect([...(appxC.reapprovalSubset?.excludedOnReapproval ?? [])].sort()).toEqual(['b2', 'b5', 'b6']);
+    expect(appxC.reapprovalSubset?.appliesOnReapproval).toHaveLength(19);
+    expect(appxC.conditions?.filter((condition) => condition.appliesAtReapproval)).toHaveLength(19);
   });
 
   it('a PAPD does not require Appendix C or Section 11', () => {
@@ -64,7 +65,12 @@ describe('APD section schema', () => {
   // These are known and documented. If one disappears, someone "fixed" a real
   // conflict without resolving it. Read docs/regulatory/apd-section-schema.md.
   it('still records the seven known conflicts', () => {
-    expect(schema.knownConflicts).toHaveLength(7);
-    expect(schema.knownConflicts.map((c) => c.id)).toContain('CONFLICT-001'); // AoA placement
+    expect(knownConflicts).toHaveLength(7);
+    expect(knownConflicts.map((c) => c.id)).toContain('CONFLICT-001'); // AoA placement
+  });
+
+  it('exposes every source gap with remediation details', () => {
+    expect(openGaps.length).toBeGreaterThan(0);
+    expect(openGaps.every((gap) => gap.impact && gap.fix)).toBe(true);
   });
 });

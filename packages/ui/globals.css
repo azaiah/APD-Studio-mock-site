@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── canvas & surfaces ── */
+    --paper: #EDF0F4;
+    --card: #FFFFFF;
+
+    /* ── text ── */
+    --ink: #101827;
+    --ink-2: #4E5A6B;
+    /* Dark enough for AA contrast at the console's smallest text size. */
+    --ink-3: #566477;
+
+    /* ── borders & interactive ── */
+    --rule: #D2DAE4;
+    --rule-2: #E3E9F0;
+    --accent: #2C5C96;
+
+    /* ── compliance verdicts (the only colored elements) ── */
+    --fail: #96262B;     --fail-bg: #FBF0F0;     --fail-rule: #E3C2C3;
+    --warn: #8A6116;     --warn-bg: #FBF5E9;     --warn-rule: #E7D6B4;
+    --pass: #1C6349;     --pass-bg: #EDF5F1;     --pass-rule: #BFD9CD;
+    --info: #3F4B52;     --info-bg: #F1F3F4;     --info-rule: #D6DBDD;
+
+    /* ── brand / chrome ── */
+    --navy: #152B4D;
+    --navy-900: #0C1A30;
+    --navy-600: #2B4A78;
+    --blue: #5890C6;
+    --blue-200: #BFD6EC;
+    --blue-50: #EAF1F9;
+
+    /* ── typography ── */
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    --sans: 'Libre Franklin', system-ui, -apple-system, sans-serif;
+
+    /* ── layout ── */
+    --rail-web: 210px;
+    --rail-site: 224px;
+    --nav: 248px;
+  }
+
+  * {
+    box-sizing: border-box;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Keyboard users must always be able to locate focus. */
+  :focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 2px;
+  }
+}

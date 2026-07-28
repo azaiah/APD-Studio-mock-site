@@ -77,9 +77,29 @@ export const Rule = z
 export type Rule = z.infer<typeof Rule>;
 
 export const OpenQuestion = z
-  .object({ id: z.string(), title: z.string(), status: z.string() })
+  .object({ 
+    id: z.string(), 
+    title: z.string(), 
+    status: z.string(),
+    detail: z.string().optional(),
+    affects: z.string().optional(),
+    resolveBy: z.string().optional(),
+    doNot: z.string().optional(),
+    priority: z.string().optional(),
+    resolution: z.string().optional()
+  })
   .passthrough();
 export type OpenQuestion = z.infer<typeof OpenQuestion>;
+
+export const Correction = z
+  .object({
+    assumption: z.string(),
+    finding: z.string(),
+    severity: z.string(),
+    ref: z.string().optional()
+  })
+  .passthrough();
+export type Correction = z.infer<typeof Correction>;
 
 export const RuleRegister = z
   .object({
@@ -92,6 +112,7 @@ export const RuleRegister = z
       .passthrough(),
     rules: z.array(Rule).min(1),
     openQuestions: z.array(OpenQuestion),
+    correctionsToPriorProjectAssumptions: z.array(Correction).optional(),
   })
   .passthrough();
 

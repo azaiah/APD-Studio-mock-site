@@ -1,12 +1,15 @@
 import raw from '../data/apd-section-schema.json' with { type: 'json' };
 import {
   SectionSchema, type Section, type SubmissionType, type DocumentType, type ValidationRule,
-} from './schema.js';
+} from './schema';
 
-export * from './schema.js';
+export * from './schema';
 
 export const schema: SectionSchema = SectionSchema.parse(raw);
 export const sections: readonly Section[] = schema.sections;
+export const knownConflicts = schema.knownConflicts;
+export const openGaps = schema.openGaps;
+export const crossDocumentRules = schema.crossDocumentRules;
 
 const byId = new Map(sections.map((s) => [s.id, s]));
 

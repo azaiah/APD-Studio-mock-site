@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   register, rules, ruleById, rulesForTrack, enforceableRules,
-  asNeededCostTriggerUsd, isStale,
+  asNeededCostTriggerUsd, isStale, openQuestions,
 } from '../src/index.js';
 
 describe('rule register invariants', () => {
@@ -81,5 +81,18 @@ describe('staleness', () => {
   it('knows when the register needs re-verification', () => {
     expect(isStale(new Date(register.meta.staleAfter))).toBe(false);
     expect(isStale(new Date('2099-01-01'))).toBe(true);
+  });
+});
+
+describe('open-question accessors', () => {
+  it('exposes every parsed open question', () => {
+    expect(openQuestions).toHaveLength(10);
+    expect(openQuestions).toBe(register.openQuestions);
+  });
+
+  it('preserves open and closed status details', () => {
+    expect(openQuestions.filter((question) => question.status.startsWith('OPEN'))).toHaveLength(8);
+    expect(openQuestions.filter((question) => question.status.startsWith('CLOSED'))).toHaveLength(2);
+    expect(openQuestions.find((question) => question.id === 'OQ-002')?.resolution).toBeTruthy();
   });
 });

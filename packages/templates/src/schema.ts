@@ -39,6 +39,35 @@ export const ValidationRule = z
   .passthrough();
 export type ValidationRule = z.infer<typeof ValidationRule>;
 
+export const CefCondition = z
+  .object({
+    ref: z.string(),
+    citation: z.string(),
+    text: z.string(),
+    appliesAtInitialApproval: z.boolean(),
+    appliesAtReapproval: z.boolean(),
+    appliesAtOperations: z.boolean().optional(),
+    linkedRules: z.array(z.string()).optional(),
+    linkedSection: z.string().optional(),
+    note: z.string().optional(),
+    appliesTo: z.array(z.string()).optional(),
+    onFaceCheckable: z.boolean().optional(),
+    textTruncatedInRetrieval: z.boolean().optional(),
+  })
+  .passthrough();
+export type CefCondition = z.infer<typeof CefCondition>;
+
+export const ReapprovalSubset = z
+  .object({
+    citation: z.string(),
+    quote: z.string(),
+    appliesOnReapproval: z.array(z.string()),
+    excludedOnReapproval: z.array(z.string()),
+    productNote: z.string().optional(),
+  })
+  .passthrough();
+export type ReapprovalSubset = z.infer<typeof ReapprovalSubset>;
+
 export const RegulatoryBasis = z
   .object({ citation: z.string().min(1) })
   .passthrough();
@@ -57,13 +86,42 @@ export const Section = z
     templateInstruction: z.string().optional(),
     reviewerFocus: z.string().optional(),
     conflictRefs: z.array(z.string()).optional(),
+    conditions: z.array(CefCondition).optional(),
+    reapprovalSubset: ReapprovalSubset.optional(),
   })
   .passthrough();
 export type Section = z.infer<typeof Section>;
 
 export const KnownConflict = z
-  .object({ id: z.string(), severity: z.string(), title: z.string() })
+  .object({
+    id: z.string(),
+    severity: z.string(),
+    title: z.string(),
+    detail: z.string().optional(),
+    assessment: z.string().optional(),
+    resolution: z.string(),
+    productImpact: z.string().optional(),
+    additionalFinding: z.string().optional(),
+    seeAlso: z.string().optional(),
+    sourceA: z.record(z.string()).optional(),
+    sourceB: z.record(z.string()).optional(),
+    sourceC: z.record(z.string()).optional(),
+    sourceD: z.record(z.string()).optional(),
+  })
   .passthrough();
+export type KnownConflict = z.infer<typeof KnownConflict>;
+
+export const OpenGap = z
+  .object({
+    id: z.string(),
+    item: z.string(),
+    impact: z.string(),
+    fix: z.string(),
+    blocks: z.union([z.string(), z.array(z.string())]).optional(),
+    priority: z.string().optional(),
+  })
+  .passthrough();
+export type OpenGap = z.infer<typeof OpenGap>;
 
 export const SectionSchema = z
   .object({
@@ -75,7 +133,7 @@ export const SectionSchema = z
     procurementChecklist: z.object({ validationRules: z.array(ValidationRule) }).passthrough(),
     crossDocumentRules: z.array(z.object({ id: z.string() }).passthrough()),
     knownConflicts: z.array(KnownConflict),
-    openGaps: z.array(z.object({ id: z.string() }).passthrough()),
+    openGaps: z.array(OpenGap),
   })
   .passthrough();
 export type SectionSchema = z.infer<typeof SectionSchema>;
