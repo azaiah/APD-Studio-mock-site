@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { portalUrl } from "@/lib/portal-urls";
 
 export default function Home() {
+  const portalSignInUrl = `${portalUrl()}/sign-in`;
+
   return (
     <>
       <a className="absolute -left-[999px] top-0 z-[99] bg-ink text-white px-4 py-2.5 focus:left-2 focus:top-2" href="#main">
@@ -22,12 +25,17 @@ export default function Home() {
             <Link href="#limits" className="text-ink-2 no-underline hover:text-navy">What it won't do</Link>
             <Link href="#who" className="text-ink-2 no-underline hover:text-navy">Who it's for</Link>
           </nav>
-          <Link
-            href="#contact"
-            className="hidden sm:inline-block bg-navy text-white px-5 py-2.5 font-semibold text-[14.5px] border border-navy tracking-[-0.006em] hover:bg-navy-900 hover:border-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 no-underline"
-          >
-            Request a walkthrough
-          </Link>
+          <div className="hidden sm:flex items-center gap-4">
+            <a href={portalSignInUrl} className="text-[14px] font-semibold text-ink-2 no-underline hover:text-navy">
+              Log in
+            </a>
+            <Link
+              href="#contact"
+              className="bg-navy text-white px-5 py-2.5 font-semibold text-[14.5px] border border-navy tracking-[-0.006em] hover:bg-navy-900 hover:border-navy-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 no-underline"
+            >
+              Request a walkthrough
+            </Link>
+          </div>
         </div>
       </header>
 
